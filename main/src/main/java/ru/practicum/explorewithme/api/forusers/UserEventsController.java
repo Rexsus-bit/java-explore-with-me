@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.explorewithme.model.event.EventFullDto;
+import ru.practicum.explorewithme.model.event.NewEventDto;
 import ru.practicum.explorewithme.model.event.UpdateEventRequest;
 
 import javax.validation.Valid;
@@ -29,9 +31,11 @@ public class UserEventsController {
     }
 
     @PostMapping("/{userId}/events")
-    public ResponseEntity<Object> createEvent(@PathVariable Long userId,
-                                               @Valid @RequestBody UpdateEventRequest updateEventRequest) {
+    public ResponseEntity<EventFullDto> createEvent(@PathVariable Long userId,
+                                                    @Valid @RequestBody NewEventDto newEventDto) {
         return null;
     }
+
+
 
 }

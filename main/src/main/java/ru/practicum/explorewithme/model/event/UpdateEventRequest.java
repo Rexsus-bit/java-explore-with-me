@@ -14,7 +14,7 @@ public class UpdateEventRequest {
     private String description;
     private LocalDateTime eventDate;
     @Min(1)
-    private Integer eventId;
+    private Long eventId;
     private Boolean paid;
     @Min(0)
     private Integer participantLimit;
