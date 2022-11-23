@@ -11,6 +11,8 @@ import ru.practicum.explorewithme.model.category.NewCategoryDto;
 import ru.practicum.explorewithme.model.event.AdminUpdateEventRequest;
 import ru.practicum.explorewithme.model.event.EventFullDto;
 import ru.practicum.explorewithme.model.event.State;
+import ru.practicum.explorewithme.model.user.NewUserRequest;
+import ru.practicum.explorewithme.model.user.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -67,14 +69,50 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<EventFullDto>> findUsers(@RequestParam List<Long> users,
-                                                         @RequestParam List<State> states,
-                                                         @RequestParam List<Long> categories,
-                                                         @RequestParam LocalDateTime rangeStart,
-                                                         @RequestParam LocalDateTime rangeEnd,
-                                                         @RequestParam(defaultValue = "0") Integer from,
-                                                         @RequestParam(defaultValue = "10") Integer size
+    public ResponseEntity<UserDto> findUsers(@RequestParam List<Integer> ids,
+                                             @RequestParam(defaultValue = "0") Integer from,
+                                             @RequestParam(defaultValue = "10") Integer size
     ) {
+        return null;
+    }
+
+    @PostMapping("/users")
+    public ResponseEntity<List<UserDto>> addUser(@RequestBody NewUserRequest newUserRequest) {
+        return null;
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<Void> deleteUsers(@PathVariable Integer userId) { // TODO подумать над возвращаемм типом
+        return null;
+    }
+
+    @PostMapping("/compilations")
+    public ResponseEntity<UserDto> addCompilation(@RequestBody NewUserRequest newUserRequest) {
+        return null;
+    }
+
+    @DeleteMapping("/compilations/{compId}")
+    public ResponseEntity<Void> deleteCompilation(@PathVariable String compId) {// TODO подумать над возвращаемм типом
+        return null;
+    }
+
+    @DeleteMapping("/compilations/{compId}/events/{eventId}")
+    public ResponseEntity<Void> deleteEventFromCompilation(@PathVariable Integer compId, @PathVariable Integer eventId) { // TODO подумать над возвращаемм типом
+        return null;
+    }
+
+    @PatchMapping("/compilations/{compId}/events/{eventId}")
+    public ResponseEntity<Void> addLinkEventToCompilation(@PathVariable Integer compId, @PathVariable Integer eventId) { //
+        return null;
+    }
+
+    @DeleteMapping("/compilations/{compId}/pin")
+    public ResponseEntity<Void> unpinCompilation(@PathVariable Integer compId) {
+        return null;
+    }
+
+    @PatchMapping("/compilations/{compId}/pin")
+    public ResponseEntity<Void> pinCompilation(@PathVariable Integer compId) {
         return null;
     }
 
