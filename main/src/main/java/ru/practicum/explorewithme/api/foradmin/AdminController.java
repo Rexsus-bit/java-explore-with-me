@@ -3,16 +3,22 @@ package ru.practicum.explorewithme.api.foradmin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explorewithme.model.category.Category;
+import ru.practicum.explorewithme.Mapper;
 import ru.practicum.explorewithme.model.category.CategoryDto;
 import ru.practicum.explorewithme.model.category.NewCategoryDto;
 import ru.practicum.explorewithme.model.event.AdminUpdateEventRequest;
+import ru.practicum.explorewithme.model.event.Event;
 import ru.practicum.explorewithme.model.event.EventFullDto;
 import ru.practicum.explorewithme.model.event.State;
 import ru.practicum.explorewithme.model.user.NewUserRequest;
+import ru.practicum.explorewithme.model.user.User;
 import ru.practicum.explorewithme.model.user.UserDto;
+import ru.practicum.explorewithme.service.AdminService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +29,9 @@ import java.util.List;
 @RequestMapping(path = "/admin")
 public class AdminController {
 
+    private final AdminService adminService;
+//    private final Mapper mapper;
+    private final ModelMapper modelMapper;
 
     @GetMapping("/events")
     public ResponseEntity<List<EventFullDto>> findEvents(@RequestParam List<Long> users,
@@ -33,6 +42,8 @@ public class AdminController {
                                                          @RequestParam(defaultValue = "0") Integer from,
                                                          @RequestParam(defaultValue = "10") Integer size
     ) {
+//        List<Event> eventsList = adminService.findEvents(users, states, categories, rangeStart, rangeEnd, from, size);
+//        return mapper.toEventsFullDtoList(eventsList);
         return null;
     }
 
@@ -69,16 +80,19 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<UserDto> findUsers(@RequestParam List<Integer> ids,
-                                             @RequestParam(defaultValue = "0") Integer from,
-                                             @RequestParam(defaultValue = "10") Integer size
+    public List<UserDto> findUsers(@RequestParam(required = false) List<Long> ids,
+                                   @RequestParam(defaultValue = "0") Integer from,
+                                   @RequestParam(defaultValue = "3") Integer size
     ) {
-        return null;
+        List<User> users = adminService.findUsers(ids, from, size);
+        return modelMapper.map(users, new TypeToken<List<UserDto>>() {
+        }.getType());
     }
 
     @PostMapping("/users")
-    public ResponseEntity<List<UserDto>> addUser(@RequestBody NewUserRequest newUserRequest) {
-        return null;
+    public UserDto addUser(@RequestBody NewUserRequest newUserRequest) {
+        User user = adminService.addUser(newUserRequest);
+        return modelMapper.map(user, UserDto.class);
     }
 
     @DeleteMapping("/users/{userId}")

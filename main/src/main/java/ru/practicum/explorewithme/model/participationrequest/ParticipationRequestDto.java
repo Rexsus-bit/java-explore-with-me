@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.model;
+package ru.practicum.explorewithme.model.participationrequest;
 
 import java.time.LocalDateTime;
 
