@@ -1,10 +1,13 @@
 package ru.practicum.explorewithme.model.event;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UpdateEventRequest {
 
     @Size(min = 20, max = 2000)

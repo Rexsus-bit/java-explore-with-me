@@ -1,15 +1,19 @@
 package ru.practicum.explorewithme.model.event;
 
+import lombok.*;
 import ru.practicum.explorewithme.model.category.CategoryDto;
 import ru.practicum.explorewithme.model.location.Location;
 import ru.practicum.explorewithme.model.user.UserShortDto;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@Builder
 public class EventFullDto {
 
     private String annotation;
-    private CategoryDto categoryDto;
+    private CategoryDto category;
     private Long confirmedRequests;
     private LocalDateTime createdOn;
     private String description;
