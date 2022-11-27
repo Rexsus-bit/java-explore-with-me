@@ -66,33 +66,18 @@ public class OffsetLimitPageable implements Pageable {
     }
 
     @Override
-    public boolean isPaged() {
-        return Pageable.super.isPaged();
-    }
-
-    @Override
-    public boolean isUnpaged() {
-        return Pageable.super.isUnpaged();
-    }
-
-    @Override
     public int getPageNumber() {
         return 0;
     }
 
     @Override
-    public Sort getSortOr(Sort sort) {
-        return Pageable.super.getSortOr(sort);
-    }
-
-    @Override
     public Pageable next() {
-        return new OffsetLimitPageable(offset, limit, sort);
+        return new OffsetLimitPageable(offset + limit, limit, sort);
     }
 
     @Override
     public Pageable previousOrFirst() {
-        return new OffsetLimitPageable(offset + limit, limit, sort);
+        return new OffsetLimitPageable(offset, limit, sort);
     }
 
     @NonNull
@@ -103,20 +88,12 @@ public class OffsetLimitPageable implements Pageable {
 
     @Override
     public Pageable withPage(int pageNumber) {
-        return new OffsetLimitPageable(offset, limit, sort);
+        return new OffsetLimitPageable(offset + limit * pageNumber, limit, sort);
     }
 
     @Override
     public boolean hasPrevious() {
         return false;
     }
-
-    @Override
-    public Optional<Pageable> toOptional() {
-        return Pageable.super.toOptional();
-    }
-
-
-
 
 }

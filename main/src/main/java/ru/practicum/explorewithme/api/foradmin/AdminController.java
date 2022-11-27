@@ -6,9 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explorewithme.Mapper;
+import ru.practicum.explorewithme.model.category.Category;
 import ru.practicum.explorewithme.model.category.CategoryDto;
 import ru.practicum.explorewithme.model.category.NewCategoryDto;
 import ru.practicum.explorewithme.model.event.AdminUpdateEventRequest;
@@ -18,6 +17,7 @@ import ru.practicum.explorewithme.model.event.State;
 import ru.practicum.explorewithme.model.user.NewUserRequest;
 import ru.practicum.explorewithme.model.user.User;
 import ru.practicum.explorewithme.model.user.UserDto;
+import ru.practicum.explorewithme.model.user.UserShortDto;
 import ru.practicum.explorewithme.service.AdminService;
 
 import java.time.LocalDateTime;
@@ -30,7 +30,6 @@ import java.util.List;
 public class AdminController {
 
     private final AdminService adminService;
-//    private final Mapper mapper;
     private final ModelMapper modelMapper;
 
     @GetMapping("/events")
@@ -42,41 +41,46 @@ public class AdminController {
                                                          @RequestParam(defaultValue = "0") Integer from,
                                                          @RequestParam(defaultValue = "10") Integer size
     ) {
-//        List<Event> eventsList = adminService.findEvents(users, states, categories, rangeStart, rangeEnd, from, size);
-//        return mapper.toEventsFullDtoList(eventsList);
-        return null;
+        List<Event> eventsList = adminService.findEvents(users, states, categories, rangeStart, rangeEnd, from, size);
+        return modelMapper.map(eventsList, new TypeToken<List<EventFullDto>>() { // TODO допилить маппинг в части полей
+        }.getType());
     }
 
     @PutMapping("/events/{eventId}")
-    public ResponseEntity<EventFullDto> editEvent(@PathVariable Long eventId,
-                                                  @RequestBody AdminUpdateEventRequest adminUpdateEventRequest) {
-
-        return null;
+    public EventFullDto editEvent(@PathVariable Long eventId,
+                                  @RequestBody AdminUpdateEventRequest adminUpdateEventRequest) {
+        Event event = adminService.editEvent(eventId, adminUpdateEventRequest);
+        EventFullDto eventFullDto = modelMapper.map(event, EventFullDto.class);
+        eventFullDto.setCategoryDto(modelMapper.map(event.getCategory(), CategoryDto.class));
+        eventFullDto.setInitiator(modelMapper.map(event.getInitiator(), UserShortDto.class));
+        return eventFullDto;
     }
 
     @PatchMapping("/events/{eventId}/publish")
-    public ResponseEntity<EventFullDto> publishEvent(@PathVariable Long eventId) {
-        return null;
+    public EventFullDto publishEvent(@PathVariable Long eventId) {
+        return modelMapper.map(adminService.publishEvent(eventId), EventFullDto.class);
     }
 
     @PatchMapping("/events/{eventId}/reject")
-    public ResponseEntity<EventFullDto> rejectEvent(@PathVariable Long eventId) {
-        return null;
+    public EventFullDto rejectEvent(@PathVariable Long eventId) {
+        return modelMapper.map(adminService.rejectEvent(eventId), EventFullDto.class);
     }
 
     @PatchMapping("/categories")
-    public ResponseEntity<CategoryDto> changeCategory(@RequestBody CategoryDto categoryDto) {
-        return null;
+    public CategoryDto changeCategory(@RequestBody CategoryDto categoryDto) {
+        Category category = adminService.changeCategory(modelMapper.map(categoryDto, Category.class));
+        return modelMapper.map(category, CategoryDto.class);
     }
 
     @PostMapping("/categories")
-    public ResponseEntity<CategoryDto> addNewCategory(@RequestBody NewCategoryDto newCategoryDto) {
-        return null;
+    public CategoryDto addNewCategory(@RequestBody NewCategoryDto newCategoryDto) {
+        Category category = adminService.addNewCategory(modelMapper.map(newCategoryDto, Category.class));
+        return modelMapper.map(category, CategoryDto.class);
     }
 
     @DeleteMapping("/categories")
-    public ResponseEntity<Void> deleteCategory(@RequestBody NewCategoryDto newCategoryDto) { // TODO Подумать над конструкцией
-       return null;
+    public void deleteCategory(@RequestParam Long catId) {
+        adminService.deleteCategory(catId);
     }
 
     @GetMapping("/users")
@@ -96,14 +100,15 @@ public class AdminController {
     }
 
     @DeleteMapping("/users/{userId}")
-    public ResponseEntity<Void> deleteUsers(@PathVariable Integer userId) { // TODO подумать над возвращаемм типом
-        return null;
+    public void deleteUsers(@PathVariable Long userId) {
+        adminService.deleteUsers(userId);
     }
 
     @PostMapping("/compilations")
     public ResponseEntity<UserDto> addCompilation(@RequestBody NewUserRequest newUserRequest) {
         return null;
     }
+
 
     @DeleteMapping("/compilations/{compId}")
     public ResponseEntity<Void> deleteCompilation(@PathVariable String compId) {// TODO подумать над возвращаемм типом
