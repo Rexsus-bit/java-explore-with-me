@@ -2,18 +2,18 @@ package ru.practicum.explorewithme.service;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.model.category.Category;
+import ru.practicum.explorewithme.model.compilation.Compilation;
+import ru.practicum.explorewithme.model.compilation.NewCompilationDto;
 import ru.practicum.explorewithme.model.event.AdminUpdateEventRequest;
 import ru.practicum.explorewithme.model.event.Event;
-import ru.practicum.explorewithme.model.event.EventFullDto;
 import ru.practicum.explorewithme.model.event.State;
 import ru.practicum.explorewithme.model.user.NewUserRequest;
 import ru.practicum.explorewithme.model.user.User;
 import ru.practicum.explorewithme.repository.CategoryJpaRepository;
+import ru.practicum.explorewithme.repository.CompilationJpaRepository;
 import ru.practicum.explorewithme.repository.EventJpaRepository;
 import ru.practicum.explorewithme.repository.UserJpaRepository;
 import ru.practicum.explorewithme.util.OffsetLimitPageable;
@@ -28,10 +28,12 @@ public class AdminService {
     private final UserJpaRepository userJpaRepository;
     private final EventJpaRepository eventJpaRepository;
     private final CategoryJpaRepository categoryJpaRepository;
+    private final CompilationJpaRepository compilationJpaRepository;
 
     private final ModelMapper modelMapper;
 
-    public List<Event> findEvents(List<Long> users, List<State> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size) {
+    public List<Event> findEvents(List<Long> users, List<State> states, List<Long> categories, LocalDateTime rangeStart
+            , LocalDateTime rangeEnd, Integer from, Integer size) {
 
         if (rangeStart == null) rangeStart = LocalDateTime.MIN;
         if (rangeEnd == null) rangeStart = LocalDateTime.MAX;
@@ -117,24 +119,10 @@ public class AdminService {
         return event;
     }
 
-    public List<EventFullDto> searchEvents(
-            List<Long> users,
-            List<String> states,
-            List<Long> categories,
-            LocalDateTime rangeStart,
-            LocalDateTime rangeEnd,
-            Integer from,
-            Integer size
-    ) {
-        PageRequest request = PageRequest.of(from, size);
-        Specification<Event> specEvent = EventSpecs
-                .hasInitiationIds(users)
-                .and(EventSpecs.hasEventCategory(categories));
-
-        List<Event> events = eventRepository.findAll(specEvent, request)
-                .filter(e -> states.contains(e.getState().getVal())).toList();
-
-        return addViewsAndRequestsForEventFullDto(events);
+    public Compilation addCompilation(NewCompilationDto newCompilationDto) {
+       List<Event> eventsOfCompilation = eventJpaRepository.findAllById(newCompilationDto.getEvents());
+       Compilation compilation = modelMapper.map(newCompilationDto, Compilation.class);
+       compilation.setEvents(eventsOfCompilation);
+       return compilationJpaRepository.save(compilation);
     }
-
 }

@@ -8,9 +8,13 @@ import org.modelmapper.TypeToken;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.explorewithme.mapper.CompilationMapper;
 import ru.practicum.explorewithme.model.category.Category;
 import ru.practicum.explorewithme.model.category.CategoryDto;
 import ru.practicum.explorewithme.model.category.NewCategoryDto;
+import ru.practicum.explorewithme.model.compilation.Compilation;
+import ru.practicum.explorewithme.model.compilation.CompilationDto;
+import ru.practicum.explorewithme.model.compilation.NewCompilationDto;
 import ru.practicum.explorewithme.model.event.AdminUpdateEventRequest;
 import ru.practicum.explorewithme.model.event.Event;
 import ru.practicum.explorewithme.model.event.EventFullDto;
@@ -32,6 +36,7 @@ public class AdminController {
 
     private final AdminService adminService;
     private final ModelMapper modelMapper;
+    private final CompilationMapper compilationMapper;
 
     @GetMapping("/events")
     public ResponseEntity<List<EventFullDto>> findEvents(@RequestParam List<Long> users,
@@ -106,10 +111,10 @@ public class AdminController {
     }
 
     @PostMapping("/compilations")
-    public ResponseEntity<UserDto> addCompilation(@RequestBody NewUserRequest newUserRequest) {
-        return null;
+    public CompilationDto addCompilation(@RequestBody NewCompilationDto newCompilationDto) {
+        Compilation compilation = adminService.addCompilation(newCompilationDto);
+        return compilationMapper.toCompilationDto(compilation);
     }
-
 
     @DeleteMapping("/compilations/{compId}")
     public ResponseEntity<Void> deleteCompilation(@PathVariable String compId) {// TODO подумать над возвращаемм типом
