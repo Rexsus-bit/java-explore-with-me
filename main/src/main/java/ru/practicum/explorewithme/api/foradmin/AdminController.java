@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.model.category.Category;
@@ -36,8 +37,8 @@ public class AdminController {
     public ResponseEntity<List<EventFullDto>> findEvents(@RequestParam List<Long> users,
                                                          @RequestParam List<State> states,
                                                          @RequestParam List<Long> categories,
-                                                         @RequestParam LocalDateTime rangeStart,
-                                                         @RequestParam LocalDateTime rangeEnd,
+                                                         @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart, // TODO что будет если убрать формат?
+                                                         @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
                                                          @RequestParam(defaultValue = "0") Integer from,
                                                          @RequestParam(defaultValue = "10") Integer size
     ) {

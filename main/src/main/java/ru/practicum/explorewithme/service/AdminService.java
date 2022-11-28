@@ -2,7 +2,9 @@ package ru.practicum.explorewithme.service;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.model.category.Category;
 import ru.practicum.explorewithme.model.event.AdminUpdateEventRequest;
@@ -31,8 +33,12 @@ public class AdminService {
 
     public List<Event> findEvents(List<Long> users, List<State> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size) {
 
+        if (rangeStart == null) rangeStart = LocalDateTime.MIN;
+        if (rangeEnd == null) rangeStart = LocalDateTime.MAX;
+        if (rangeEnd.isBefore(rangeStart)) throw new RuntimeException(); // TODO прорботать исключение ("start must be before end")
+        Pageable page = OffsetLimitPageable.of(from, size);
 
-        return null;
+        return eventJpaRepository.findEvents(users, states, categories, rangeStart, rangeEnd, page);
     }
 
 
@@ -110,4 +116,25 @@ public class AdminService {
         event.setState(State.CANCELED);
         return event;
     }
+
+    public List<EventFullDto> searchEvents(
+            List<Long> users,
+            List<String> states,
+            List<Long> categories,
+            LocalDateTime rangeStart,
+            LocalDateTime rangeEnd,
+            Integer from,
+            Integer size
+    ) {
+        PageRequest request = PageRequest.of(from, size);
+        Specification<Event> specEvent = EventSpecs
+                .hasInitiationIds(users)
+                .and(EventSpecs.hasEventCategory(categories));
+
+        List<Event> events = eventRepository.findAll(specEvent, request)
+                .filter(e -> states.contains(e.getState().getVal())).toList();
+
+        return addViewsAndRequestsForEventFullDto(events);
+    }
+
 }
