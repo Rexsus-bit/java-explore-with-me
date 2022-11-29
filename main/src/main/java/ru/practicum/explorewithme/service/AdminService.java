@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.practicum.explorewithme.exceptions.ObjectDoesNotExistException;
 import ru.practicum.explorewithme.model.category.Category;
 import ru.practicum.explorewithme.model.compilation.Compilation;
 import ru.practicum.explorewithme.model.compilation.NewCompilationDto;
@@ -62,6 +63,7 @@ public class AdminService {
     }
 
     public void deleteUsers(Long userId) {
+        userJpaRepository.findById(userId).orElseThrow(RuntimeException::new);
         userJpaRepository.deleteById(userId);
 
     }
@@ -75,7 +77,7 @@ public class AdminService {
     }
 
     public void deleteCategory(Long catId) {
-        categoryJpaRepository.deleteById(catId);
+            categoryJpaRepository.deleteById(catId);
     }
 
     public Event editEvent(Long eventId, AdminUpdateEventRequest adminUpdateEventRequest) {

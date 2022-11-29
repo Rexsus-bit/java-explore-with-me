@@ -8,6 +8,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.explorewithme.exceptions.ObjectDoesNotExistException;
 import ru.practicum.explorewithme.mapper.CompilationMapper;
 import ru.practicum.explorewithme.model.category.Category;
 import ru.practicum.explorewithme.model.category.CategoryDto;
@@ -84,9 +85,9 @@ public class AdminController {
         return modelMapper.map(category, CategoryDto.class);
     }
 
-    @DeleteMapping("/categories")
-    public void deleteCategory(@RequestParam Long catId) {
-        adminService.deleteCategory(catId);
+    @DeleteMapping("/categories/{catId}")
+    public void deleteCategory(@PathVariable Long catId) {
+            adminService.deleteCategory(catId);
     }
 
     @GetMapping("/users")
