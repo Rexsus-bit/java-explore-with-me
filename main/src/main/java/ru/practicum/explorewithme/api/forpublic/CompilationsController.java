@@ -5,6 +5,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.explorewithme.mapper.CompilationMapper;
+import ru.practicum.explorewithme.model.compilation.Compilation;
+import ru.practicum.explorewithme.model.compilation.CompilationDto;
+import ru.practicum.explorewithme.repository.CompilationJpaRepository;
+import ru.practicum.explorewithme.service.publicservices.CompilationService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -12,18 +20,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/compilations")
 public class CompilationsController {
 
+    private final CompilationService compilationService;
 
     @GetMapping
-    public ResponseEntity<Object> getCompilations(@RequestParam(required = false) Boolean pinned,
-                                            @RequestParam (defaultValue = "0") Integer from,
-                                            @RequestParam (defaultValue = "10") Integer size
+    public List<CompilationDto> getCompilations(@RequestParam(required = false) Boolean pinned,
+                                                @RequestParam (defaultValue = "0") Integer from,
+                                                @RequestParam (defaultValue = "10") Integer size
     ){
-        return null;
+
+        List<Compilation> compilationsList = compilationService.getCompilations(pinned, from, size);
+        return compilationsList.stream().map(CompilationMapper::toCompilationDto)
+                .collect(Collectors.toList());
+
     }
 
     @GetMapping("/{compId}")
-    public ResponseEntity<Object> getCompilationId(@PathVariable Long compId) {
-        return null;
+    public CompilationDto getCompilationId(@PathVariable Long compId) {
+        return CompilationMapper.toCompilationDto(compilationService.getCompilationId(compId));
     }
 
 }

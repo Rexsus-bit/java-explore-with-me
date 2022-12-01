@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.practicum.explorewithme.exceptions.ObjectDoesNotExistException;
+import ru.practicum.explorewithme.exceptions.CategoryNotFoundException;
+import ru.practicum.explorewithme.exceptions.CompilationNotFoundException;
 import ru.practicum.explorewithme.model.category.Category;
 import ru.practicum.explorewithme.model.compilation.Compilation;
 import ru.practicum.explorewithme.model.compilation.NewCompilationDto;
@@ -106,11 +107,12 @@ public class AdminService {
     }
 
     public Event publishEvent(Long eventId) {
-       Event event = eventJpaRepository.findById(eventId).orElseThrow(RuntimeException::new); // TODO выбрать тип ошибки, не может быть опубликовано
+       Event event = eventJpaRepository.findById(eventId).orElseThrow(CategoryNotFoundException::new); // TODO выбрать тип ошибки, не может быть опубликовано
        if (event.getState().equals(State.PENDING) && event.getEventDate().isAfter(LocalDateTime.now().plusHours(1))){
-           event.setState(State.PUBLISHED);
        } else throw new RuntimeException(); // TODO выбрать тип ошибки, не может быть опубликовано
-    return event;
+        event.setState(State.PUBLISHED);
+        event.setPublishedOn(LocalDateTime.now());
+    return eventJpaRepository.save(event);
 
 
     }
@@ -127,4 +129,36 @@ public class AdminService {
        compilation.setEvents(eventsOfCompilation);
        return compilationJpaRepository.save(compilation);
     }
+
+    public void deleteCompilation(Long compId) {
+        categoryJpaRepository.deleteById(compId);
+    }
+
+    public void unpinCompilation(Long compId) {
+        Compilation compilation = compilationJpaRepository.findById(compId).orElseThrow(CompilationNotFoundException::new);
+        compilation.setPinned(false);
+        compilationJpaRepository.save(compilation);
+    }
+
+    public void pinCompilation(Long compId) {
+        Compilation compilation = compilationJpaRepository.findById(compId).orElseThrow(CompilationNotFoundException::new);
+        compilation.setPinned(true);
+        compilationJpaRepository.save(compilation);
+    }
+
+    public void deleteEventFromCompilation(Long compId, Long eventId) {
+        Compilation compilation = compilationJpaRepository.findById(compId).orElseThrow(CompilationNotFoundException::new);
+        Event event = eventJpaRepository.findById(eventId).orElseThrow(CompilationNotFoundException::new);
+        compilation.getEvents().remove(event);
+        compilationJpaRepository.save(compilation);
+    }
+
+    public void addLinkEventToCompilation(Long compId, Long eventId) {
+        Compilation compilation = compilationJpaRepository.findById(compId).orElseThrow(CompilationNotFoundException::new);
+        Event event = eventJpaRepository.findById(eventId).orElseThrow(CompilationNotFoundException::new);
+        compilation.getEvents().add(event);
+        compilationJpaRepository.save(compilation);
+    }
+
+
 }

@@ -11,20 +11,24 @@ import ru.practicum.explorewithme.model.event.EventFullDto;
 import ru.practicum.explorewithme.model.event.EventShortDto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class CompilationMapper {
 
-    private final ModelMapper modelMapper;
+    public static CompilationDto toCompilationDto(Compilation compilation) {
 
+        List<EventShortDto> events = compilation.getEvents().stream()
+                .map(EventMapper::toEventShortDto)
+                .collect(Collectors.toList());
 
-    public CompilationDto toCompilationDto(Compilation compilation) {
-//        List<EventShortDto> eventsShortDto = eventMapper.toEventShortDtoList(compilation.getEvents());
-//        CompilationDto compilationDto = modelMapper.map(compilation, CompilationDto.class);
-//        compilationDto.setEvents(eventsShortDto);
-//        return compilationDto;
-        return modelMapper.map(compilation, CompilationDto.class);
+        return CompilationDto.builder()
+                .events(events)
+                .id(compilation.getId())
+                .pinned(compilation.getPinned())
+                .title(compilation.getTitle())
+                .build();
 
 
 

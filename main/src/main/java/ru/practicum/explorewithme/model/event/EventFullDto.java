@@ -1,5 +1,6 @@
 package ru.practicum.explorewithme.model.event;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.explorewithme.model.category.CategoryDto;
@@ -10,16 +11,17 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
 public class EventFullDto {
 
     private String annotation;
-    private CategoryDto categoryDto;//TODO
+    private CategoryDto category;
     private Long confirmedRequests;
     private LocalDateTime createdOn;
     private String description;
     private LocalDateTime eventDate;
     private Long id;
-    private UserShortDto initiator; //TODO
+    private UserShortDto initiator;
     private Location location;
     private Boolean paid;
     private Integer participantLimit;

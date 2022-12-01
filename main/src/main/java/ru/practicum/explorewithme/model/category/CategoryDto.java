@@ -5,7 +5,11 @@ import lombok.*;
 import javax.persistence.*;
 
 
-@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CategoryDto {
 
     private Long id;

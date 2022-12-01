@@ -1,5 +1,5 @@
 package ru.practicum.explorewithme.model.event;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;

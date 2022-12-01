@@ -1,11 +1,17 @@
 package ru.practicum.explorewithme.model.event;
 
-import ru.practicum.explorewithme.model.category.CategoryDto;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.practicum.explorewithme.model.location.Location;
-import ru.practicum.explorewithme.model.user.UserShortDto;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class NewEventDto {
 
     private String annotation;

@@ -6,11 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.explorewithme.mapper.EventMapper;
+import ru.practicum.explorewithme.model.event.*;
 import ru.practicum.explorewithme.model.participationrequest.ParticipationRequestDto;
-import ru.practicum.explorewithme.model.event.EventFullDto;
-import ru.practicum.explorewithme.model.event.EventShortDto;
-import ru.practicum.explorewithme.model.event.NewEventDto;
-import ru.practicum.explorewithme.model.event.UpdateEventRequest;
 import ru.practicum.explorewithme.service.UserService;
 
 import javax.validation.Valid;
@@ -39,9 +37,9 @@ public class UserEventsController {
     }
 
     @PostMapping("/{userId}/events")
-    public EventFullDto createEvent(@PathVariable Long userId,
-                                                    @Valid @RequestBody NewEventDto newEventDto) {
-        return modelMapper.map(userService.createEvent(userId, newEventDto), EventFullDto.class);
+    public EventFullDto createEvent(@PathVariable Long userId, @Valid @RequestBody NewEventDto newEventDto) {
+        Event event = userService.createEvent(userId, newEventDto);
+        return EventMapper.toEventFullDto(event);
     }
 
     @GetMapping("/{userId}/events/{eventId}")

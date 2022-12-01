@@ -18,26 +18,28 @@ import java.time.LocalDateTime;
 public class Event {
 
     private String annotation;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private Category category;
     private Long confirmedRequests;
     private LocalDateTime createdOn;
+    @Column(length = 1024)
     private String description;
     private LocalDateTime eventDate;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "initiator_id")
     private User initiator;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id")
     private Location location;
     private Boolean paid;
     private Integer participantLimit;
     private LocalDateTime publishedOn;
     private Boolean requestModeration;
+    @Enumerated(EnumType.STRING)
     private State state;
     private String title;
     private Long views;

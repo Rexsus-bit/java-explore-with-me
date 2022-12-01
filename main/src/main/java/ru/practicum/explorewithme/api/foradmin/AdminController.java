@@ -7,9 +7,10 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explorewithme.exceptions.ObjectDoesNotExistException;
 import ru.practicum.explorewithme.mapper.CompilationMapper;
+import ru.practicum.explorewithme.mapper.EventMapper;
 import ru.practicum.explorewithme.model.category.Category;
 import ru.practicum.explorewithme.model.category.CategoryDto;
 import ru.practicum.explorewithme.model.category.NewCategoryDto;
@@ -28,6 +29,7 @@ import ru.practicum.explorewithme.service.AdminService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -40,7 +42,7 @@ public class AdminController {
     private final CompilationMapper compilationMapper;
 
     @GetMapping("/events")
-    public ResponseEntity<List<EventFullDto>> findEvents(@RequestParam List<Long> users,
+    public List<EventFullDto> findEvents(@RequestParam List<Long> users,
                                                          @RequestParam List<State> states,
                                                          @RequestParam List<Long> categories,
                                                          @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart, // TODO что будет если убрать формат?
@@ -49,28 +51,24 @@ public class AdminController {
                                                          @RequestParam(defaultValue = "10") Integer size
     ) {
         List<Event> eventsList = adminService.findEvents(users, states, categories, rangeStart, rangeEnd, from, size);
-        return modelMapper.map(eventsList, new TypeToken<List<EventFullDto>>() { // TODO допилить маппинг в части полей
-        }.getType());
+        return eventsList.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
     }
 
     @PutMapping("/events/{eventId}")
     public EventFullDto editEvent(@PathVariable Long eventId,
                                   @RequestBody AdminUpdateEventRequest adminUpdateEventRequest) {
         Event event = adminService.editEvent(eventId, adminUpdateEventRequest);
-        EventFullDto eventFullDto = modelMapper.map(event, EventFullDto.class);
-        eventFullDto.setCategoryDto(modelMapper.map(event.getCategory(), CategoryDto.class));
-        eventFullDto.setInitiator(modelMapper.map(event.getInitiator(), UserShortDto.class));
-        return eventFullDto;
+        return  EventMapper.toEventFullDto(event);
     }
 
     @PatchMapping("/events/{eventId}/publish")
     public EventFullDto publishEvent(@PathVariable Long eventId) {
-        return modelMapper.map(adminService.publishEvent(eventId), EventFullDto.class);
+        return  EventMapper.toEventFullDto(adminService.publishEvent(eventId));
     }
 
     @PatchMapping("/events/{eventId}/reject")
     public EventFullDto rejectEvent(@PathVariable Long eventId) {
-        return modelMapper.map(adminService.rejectEvent(eventId), EventFullDto.class);
+        return EventMapper.toEventFullDto(adminService.rejectEvent(eventId));
     }
 
     @PatchMapping("/categories")
@@ -118,28 +116,28 @@ public class AdminController {
     }
 
     @DeleteMapping("/compilations/{compId}")
-    public ResponseEntity<Void> deleteCompilation(@PathVariable String compId) {// TODO подумать над возвращаемм типом
-        return null;
+    public void deleteCompilation(@PathVariable Long compId) {
+        adminService.deleteCompilation(compId);
     }
 
     @DeleteMapping("/compilations/{compId}/events/{eventId}")
-    public ResponseEntity<Void> deleteEventFromCompilation(@PathVariable Integer compId, @PathVariable Integer eventId) { // TODO подумать над возвращаемм типом
-        return null;
+    public void deleteEventFromCompilation(@PathVariable Long compId, @PathVariable Long eventId) { // TODO подумать над возвращаемм типом
+        adminService.deleteEventFromCompilation(compId, eventId);
     }
 
     @PatchMapping("/compilations/{compId}/events/{eventId}")
-    public ResponseEntity<Void> addLinkEventToCompilation(@PathVariable Integer compId, @PathVariable Integer eventId) { //
-        return null;
+    public void addLinkEventToCompilation(@PathVariable Long compId, @PathVariable Long eventId) { //
+        adminService.addLinkEventToCompilation(compId, eventId);
     }
 
     @DeleteMapping("/compilations/{compId}/pin")
-    public ResponseEntity<Void> unpinCompilation(@PathVariable Integer compId) {
-        return null;
+    public void unpinCompilation(@PathVariable Long compId) {
+        adminService.unpinCompilation(compId);
     }
 
     @PatchMapping("/compilations/{compId}/pin")
-    public ResponseEntity<Void> pinCompilation(@PathVariable Integer compId) {
-        return null;
+    public void pinCompilation(@PathVariable Long compId) {
+       adminService.pinCompilation(compId);
     }
 
 }
