@@ -4,12 +4,14 @@ import ru.practicum.explorewithme.model.category.CategoryDto;
 import ru.practicum.explorewithme.model.event.Event;
 import ru.practicum.explorewithme.model.event.EventFullDto;
 import ru.practicum.explorewithme.model.event.EventShortDto;
+import ru.practicum.explorewithme.model.event.UpdateEventRequest;
 import ru.practicum.explorewithme.model.user.UserShortDto;
 
 import java.util.List;
 
 
 public class EventMapper {
+
     public static EventShortDto toEventShortDto(Event event) {
 
         CategoryDto categoryDto = CategoryDto.builder()
@@ -33,7 +35,6 @@ public class EventMapper {
                 .title(event.getTitle())
                 .views(event.getViews())
                 .build();
-
     }
 
     public static EventFullDto toEventFullDto(Event event){

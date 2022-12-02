@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.model.participationrequest;
 
 import lombok.*;
+import ru.practicum.explorewithme.model.Status;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @ToString
 @Entity
 @Table(name = "locations")
@@ -21,7 +23,8 @@ public class ParticipationRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
     private  Long requester;
-    private  String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
 
 }

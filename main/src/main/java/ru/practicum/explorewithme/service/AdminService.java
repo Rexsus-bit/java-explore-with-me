@@ -38,7 +38,7 @@ public class AdminService {
             , LocalDateTime rangeEnd, Integer from, Integer size) {
 
         if (rangeStart == null) rangeStart = LocalDateTime.MIN;
-        if (rangeEnd == null) rangeStart = LocalDateTime.MAX;
+        if (rangeEnd == null) rangeEnd = LocalDateTime.MAX;
         if (rangeEnd.isBefore(rangeStart)) throw new RuntimeException(); // TODO прорботать исключение ("start must be before end")
         Pageable page = OffsetLimitPageable.of(from, size);
 
@@ -87,7 +87,7 @@ public class AdminService {
        return eventJpaRepository.save(updatedEvent);
     }
 
-    Event updateEvent(Event event, AdminUpdateEventRequest adminUpdateEventRequest){
+    private Event updateEvent(Event event, AdminUpdateEventRequest adminUpdateEventRequest){
 
         if(adminUpdateEventRequest.getAnnotation() != null) event.setAnnotation(adminUpdateEventRequest
                 .getAnnotation());

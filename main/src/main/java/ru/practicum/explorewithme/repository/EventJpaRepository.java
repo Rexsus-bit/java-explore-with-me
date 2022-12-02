@@ -21,4 +21,10 @@ public interface EventJpaRepository extends JpaRepository<Event, Long> {
             "and event.eventDate between ?4 and ?5")
     List<Event> findEvents(List<Long> users, List<State> states, List<Long> categories, LocalDateTime rangeStart
             , LocalDateTime rangeEnd, Pageable page);
+
+    List<Event> findAllByInitiatorId(long initiator_id, Pageable page);
+
+    Event findByIdAndInitiatorId(Long id, long initiator_id);
+
 }
+

@@ -42,7 +42,7 @@ public class AdminController {
     private final CompilationMapper compilationMapper;
 
     @GetMapping("/events")
-    public List<EventFullDto> findEvents(@RequestParam List<Long> users,
+    public List<EventFullDto> findEvents(@RequestParam List<Long> users, // TODO required false?
                                                          @RequestParam List<State> states,
                                                          @RequestParam List<Long> categories,
                                                          @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart, // TODO что будет если убрать формат?

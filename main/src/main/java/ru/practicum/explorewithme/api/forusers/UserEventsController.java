@@ -13,6 +13,7 @@ import ru.practicum.explorewithme.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -24,16 +25,18 @@ public class UserEventsController {
     private final ModelMapper modelMapper;
 
     @GetMapping("/{userId}/events")
-    public ResponseEntity<List<EventShortDto>> getEventsOfUser(@PathVariable Long userId,
+    public List<EventShortDto> getEventsOfUser(@PathVariable Long userId,
                                                                @RequestParam(defaultValue = "0") Integer from,
                                                                @RequestParam(defaultValue = "10") Integer size) {
-        return null;
+        List<Event> events = userService.getEventsOfUser(userId, from, size);
+        return events.stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
+
     }
 
     @PatchMapping("/{userId}/events")
-    public ResponseEntity<EventFullDto> updateEventOfCurrentUser(@PathVariable Long userId,
+    public EventFullDto updateEventOfCurrentUser(@PathVariable Long userId,
                                                     @RequestBody UpdateEventRequest updateEventRequest) {
-        return null;
+        return EventMapper.toEventFullDto(userService.updateEventOfCurrentUser(userId, updateEventRequest));
     }
 
     @PostMapping("/{userId}/events")
@@ -43,8 +46,8 @@ public class UserEventsController {
     }
 
     @GetMapping("/{userId}/events/{eventId}")
-    public ResponseEntity<EventFullDto> getEventOfCurrentUserById(@PathVariable Long userId, @PathVariable Long eventId) {
-        return null;
+    public EventFullDto getEventOfCurrentUserById(@PathVariable Long userId, @PathVariable Long eventId) {
+       return  EventMapper.toEventFullDto(userService.getEventOfCurrentUserById(userId, eventId));
     }
 
     @PatchMapping("/{userId}/events/{eventId}")
@@ -79,10 +82,11 @@ public class UserEventsController {
     }
 
 
-    @PostMapping("/{userId}/requests")
-    public ResponseEntity<ParticipationRequestDto> addParticipationRequestOfUser(@PathVariable Long userId,
-                                                                                 @RequestParam Long eventId) {
-        return null;
+    @PostMapping("{userId}/requests/")
+    public ParticipationRequestDto addParticipationRequestOfUser(@PathVariable Long userId, @RequestParam Long eventId) {
+        System.out.println("s");
+//TODO сделать
+        return modelMapper.map(userService.addParticipationRequestOfUser(userId, eventId), ParticipationRequestDto.class);
     }
 
     @PatchMapping("/{userId}/requests/{requestId}/cancel")
