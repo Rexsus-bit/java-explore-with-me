@@ -5,6 +5,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.exceptions.CategoryNotFoundException;
 import ru.practicum.explorewithme.exceptions.EventNotFoundException;
 import ru.practicum.explorewithme.exceptions.UserNotFoundException;
@@ -29,6 +31,7 @@ public class UserService {
     private final LocationJpaRepository locationJpaRepository;
     private final ParticipationRequestJpaRepository participationRequestJpaRepository;
 
+    @Transactional
     public Event createEvent(Long userId, NewEventDto newEventDto) {
         Event event = modelMapper.map(newEventDto, Event.class);
 
@@ -41,6 +44,7 @@ public class UserService {
         return eventJpaRepository.save(event);
     }
 
+    @Transactional
     public Event updateEventOfCurrentUser(Long userId, UpdateEventRequest updateEventRequest) {
         Event event = eventJpaRepository.findById(updateEventRequest.getEventId())
                 .orElseThrow(EventNotFoundException::new);
@@ -62,6 +66,7 @@ public class UserService {
         if (updateEventRequest.getTitle() != null) event.setTitle(updateEventRequest.getTitle());
     }
 
+    @Transactional
     public ParticipationRequest addParticipationRequestOfUser(Long userId, Long eventId) {
         if (!eventJpaRepository.existsById(eventId)) throw new EventNotFoundException();
         if (!userJpaRepository.existsById(userId)) throw new UserNotFoundException();
@@ -81,6 +86,5 @@ public class UserService {
 
     public Event getEventOfCurrentUserById(Long userId, Long eventId) {
         return eventJpaRepository.findByIdAndInitiatorId(eventId, userId);
-
     }
 }

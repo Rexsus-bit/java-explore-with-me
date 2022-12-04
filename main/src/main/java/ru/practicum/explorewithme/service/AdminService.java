@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.exceptions.CategoryNotFoundException;
 import ru.practicum.explorewithme.exceptions.CompilationNotFoundException;
 import ru.practicum.explorewithme.model.category.Category;
@@ -14,10 +16,7 @@ import ru.practicum.explorewithme.model.event.Event;
 import ru.practicum.explorewithme.model.event.State;
 import ru.practicum.explorewithme.model.user.NewUserRequest;
 import ru.practicum.explorewithme.model.user.User;
-import ru.practicum.explorewithme.repository.CategoryJpaRepository;
-import ru.practicum.explorewithme.repository.CompilationJpaRepository;
-import ru.practicum.explorewithme.repository.EventJpaRepository;
-import ru.practicum.explorewithme.repository.UserJpaRepository;
+import ru.practicum.explorewithme.repository.*;
 import ru.practicum.explorewithme.util.OffsetLimitPageable;
 
 import java.time.LocalDateTime;
@@ -31,7 +30,7 @@ public class AdminService {
     private final EventJpaRepository eventJpaRepository;
     private final CategoryJpaRepository categoryJpaRepository;
     private final CompilationJpaRepository compilationJpaRepository;
-
+    private final EventCriteriaRepository eventCriteriaRepository;
     private final ModelMapper modelMapper;
 
     public List<Event> findEvents(List<Long> users, List<State> states, List<Long> categories, LocalDateTime rangeStart
@@ -39,20 +38,20 @@ public class AdminService {
 
         if (rangeStart == null) rangeStart = LocalDateTime.MIN;
         if (rangeEnd == null) rangeEnd = LocalDateTime.MAX;
-        if (rangeEnd.isBefore(rangeStart)) throw new RuntimeException(); // TODO прорботать исключение ("start must be before end")
-        Pageable page = OffsetLimitPageable.of(from, size);
+        if (rangeEnd.isBefore(rangeStart)) throw new RuntimeException();
+        // TODO прорботать исключение ("start must be before end")
 
-        return eventJpaRepository.findEvents(users, states, categories, rangeStart, rangeEnd, page);
+        return eventCriteriaRepository.findEventsByCustomCriteria(users, states, categories, rangeStart, rangeEnd, from, size, null);
     }
 
-
+    @Transactional
     public User addUser(NewUserRequest newUserRequest) {
         User user = modelMapper.map(newUserRequest, User.class);
         return userJpaRepository.save(user);
 
     }
 
-
+    @Transactional
     public List<User> findUsers(List<Long> ids, Integer from, Integer size) {
         Pageable page = OffsetLimitPageable.of(from, size);
         if (ids == null) {
@@ -63,24 +62,29 @@ public class AdminService {
 
     }
 
+    @Transactional
     public void deleteUsers(Long userId) {
         userJpaRepository.findById(userId).orElseThrow(RuntimeException::new);
         userJpaRepository.deleteById(userId);
 
     }
 
+    @Transactional
     public Category addNewCategory(Category category) {
         return categoryJpaRepository.save(category);
     }
 
+    @Transactional
     public Category changeCategory(Category category) {
         return categoryJpaRepository.save(category);
     }
 
+    @Transactional
     public void deleteCategory(Long catId) {
             categoryJpaRepository.deleteById(catId);
     }
 
+    @Transactional
     public Event editEvent(Long eventId, AdminUpdateEventRequest adminUpdateEventRequest) {
        Event updatedEvent =  updateEvent(eventJpaRepository.findById(eventId)
                 .orElseThrow(RuntimeException::new), adminUpdateEventRequest);// TODO ВЫВОД ОШИБКИ
@@ -106,6 +110,7 @@ public class AdminService {
         return event;
     }
 
+    @Transactional
     public Event publishEvent(Long eventId) {
        Event event = eventJpaRepository.findById(eventId).orElseThrow(CategoryNotFoundException::new); // TODO выбрать тип ошибки, не может быть опубликовано
        if (event.getState().equals(State.PENDING) && event.getEventDate().isAfter(LocalDateTime.now().plusHours(1))){
@@ -113,16 +118,16 @@ public class AdminService {
         event.setState(State.PUBLISHED);
         event.setPublishedOn(LocalDateTime.now());
     return eventJpaRepository.save(event);
-
-
     }
 
+    @Transactional
     public Event rejectEvent(Long eventId) {
         Event event = eventJpaRepository.findById(eventId).orElseThrow(RuntimeException::new); // TODO выбрать тип ошибки, не может быть опубликовано
         event.setState(State.CANCELED);
         return event;
     }
 
+    @Transactional
     public Compilation addCompilation(NewCompilationDto newCompilationDto) {
        List<Event> eventsOfCompilation = eventJpaRepository.findAllById(newCompilationDto.getEvents());
        Compilation compilation = modelMapper.map(newCompilationDto, Compilation.class);
@@ -130,22 +135,26 @@ public class AdminService {
        return compilationJpaRepository.save(compilation);
     }
 
+    @Transactional
     public void deleteCompilation(Long compId) {
         categoryJpaRepository.deleteById(compId);
     }
 
+    @Transactional
     public void unpinCompilation(Long compId) {
         Compilation compilation = compilationJpaRepository.findById(compId).orElseThrow(CompilationNotFoundException::new);
         compilation.setPinned(false);
         compilationJpaRepository.save(compilation);
     }
 
+    @Transactional
     public void pinCompilation(Long compId) {
         Compilation compilation = compilationJpaRepository.findById(compId).orElseThrow(CompilationNotFoundException::new);
         compilation.setPinned(true);
         compilationJpaRepository.save(compilation);
     }
 
+    @Transactional
     public void deleteEventFromCompilation(Long compId, Long eventId) {
         Compilation compilation = compilationJpaRepository.findById(compId).orElseThrow(CompilationNotFoundException::new);
         Event event = eventJpaRepository.findById(eventId).orElseThrow(CompilationNotFoundException::new);
@@ -153,6 +162,7 @@ public class AdminService {
         compilationJpaRepository.save(compilation);
     }
 
+    @Transactional
     public void addLinkEventToCompilation(Long compId, Long eventId) {
         Compilation compilation = compilationJpaRepository.findById(compId).orElseThrow(CompilationNotFoundException::new);
         Event event = eventJpaRepository.findById(eventId).orElseThrow(CompilationNotFoundException::new);

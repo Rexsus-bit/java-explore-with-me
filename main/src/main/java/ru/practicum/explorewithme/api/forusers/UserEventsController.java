@@ -81,11 +81,8 @@ public class UserEventsController {
         return null;
     }
 
-
-    @PostMapping("{userId}/requests/")
+    @PostMapping("/{userId}/requests/")
     public ParticipationRequestDto addParticipationRequestOfUser(@PathVariable Long userId, @RequestParam Long eventId) {
-        System.out.println("s");
-//TODO сделать
         return modelMapper.map(userService.addParticipationRequestOfUser(userId, eventId), ParticipationRequestDto.class);
     }
 

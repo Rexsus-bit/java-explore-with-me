@@ -2,11 +2,9 @@ package ru.practicum.explorewithme.service.publicservices;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.exceptions.CompilationNotFoundException;
 import ru.practicum.explorewithme.model.compilation.Compilation;
-import ru.practicum.explorewithme.model.compilation.CompilationDto;
 import ru.practicum.explorewithme.repository.CompilationJpaRepository;
 import ru.practicum.explorewithme.util.OffsetLimitPageable;
 
