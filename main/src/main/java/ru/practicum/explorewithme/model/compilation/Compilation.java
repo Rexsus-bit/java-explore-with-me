@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "compilations")
 public class Compilation {
 
-    @OneToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Event> events;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

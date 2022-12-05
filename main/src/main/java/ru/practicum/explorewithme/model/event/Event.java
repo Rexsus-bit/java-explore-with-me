@@ -17,23 +17,24 @@ import java.time.LocalDateTime;
 @Table(name = "events")
 public class Event {
 
+    @Column(length = 1024)
     private String annotation;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id")
+//    @JoinColumn(name = "category_id")
     private Category category;
     private Long confirmedRequests;
     private LocalDateTime createdOn;
-    @Column(length = 1024)
+    @Column(length = 10000)
     private String description;
     private LocalDateTime eventDate;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "initiator_id")
+//    @JoinColumn(name = "initiator_id")
     private User initiator;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "location_id")
+//    @JoinColumn(name = "location_id")
     private Location location;
     private Boolean paid;
     private Integer participantLimit;
@@ -41,6 +42,7 @@ public class Event {
     private Boolean requestModeration;
     @Enumerated(EnumType.STRING)
     private State state;
+    @Column(length = 1024)
     private String title;
     private Long views;
 

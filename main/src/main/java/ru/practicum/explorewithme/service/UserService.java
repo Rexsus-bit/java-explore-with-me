@@ -3,12 +3,11 @@ package ru.practicum.explorewithme.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.exceptions.CategoryNotFoundException;
 import ru.practicum.explorewithme.exceptions.EventNotFoundException;
+import ru.practicum.explorewithme.exceptions.ParticipationRequestNotFoundException;
 import ru.practicum.explorewithme.exceptions.UserNotFoundException;
 import ru.practicum.explorewithme.model.Status;
 import ru.practicum.explorewithme.model.event.*;
@@ -28,15 +27,16 @@ public class UserService {
     private final UserJpaRepository userJpaRepository;
     private final EventJpaRepository eventJpaRepository;
     private final CategoryJpaRepository categoryJpaRepository;
-    private final LocationJpaRepository locationJpaRepository;
     private final ParticipationRequestJpaRepository participationRequestJpaRepository;
 
     @Transactional
     public Event createEvent(Long userId, NewEventDto newEventDto) {
         Event event = modelMapper.map(newEventDto, Event.class);
 
-        event.setInitiator(userJpaRepository.findById(userId).orElseThrow(RuntimeException::new)); //TODO
-        event.setCategory(categoryJpaRepository.findById(newEventDto.getCategory()).orElseThrow(RuntimeException::new));// TODO ошибка
+        event.setInitiator(userJpaRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new));
+        event.setCategory(categoryJpaRepository.findById(newEventDto.getCategory())
+                .orElseThrow(CategoryNotFoundException::new));
         event.setViews(0L);
         event.setConfirmedRequests(0L);
         event.setState(State.PENDING);
@@ -72,8 +72,8 @@ public class UserService {
         if (!userJpaRepository.existsById(userId)) throw new UserNotFoundException();
         ParticipationRequest participationRequest = ParticipationRequest.builder()
                 .created(LocalDateTime.now())
-                .event(eventId)
-                .requester(userId)
+                .event(eventJpaRepository.findById(eventId).orElseThrow(EventNotFoundException::new))
+                .requester(userJpaRepository.findById(userId).orElseThrow(UserNotFoundException::new))
                 .status(Status.PENDING)
                 .build();
         return participationRequestJpaRepository.save(participationRequest);
@@ -86,5 +86,54 @@ public class UserService {
 
     public Event getEventOfCurrentUserById(Long userId, Long eventId) {
         return eventJpaRepository.findByIdAndInitiatorId(eventId, userId);
+    }
+
+    public ParticipationRequest cancelParticipationRequestByUser(Long userId, Long requestId) {
+        ParticipationRequest participationRequest = participationRequestJpaRepository.findById(requestId)
+                .orElseThrow(ParticipationRequestNotFoundException::new);
+        User user = userJpaRepository.findById(userId).orElseThrow(EventNotFoundException::new);
+        if (!participationRequest.getRequester().equals(user)) throw new RuntimeException(); // TODO Ошбика несовпадения
+        participationRequest.setStatus(Status.CANCELED);
+        return participationRequestJpaRepository.save(participationRequest);
+
+    }
+
+    public List<ParticipationRequest> getInformationOnParticipationRequestsOfUser(Long userId) {
+        return participationRequestJpaRepository.findAllByRequester_Id(userId);
+    }
+
+    public List<ParticipationRequest> getInformationOnParticipationRequestToEventOfUser(Long userId, Long eventId) {
+        Event event = eventInitiatorCheck(userId, eventId);
+        return participationRequestJpaRepository.findByEvent(event);
+    }
+
+    private Event eventInitiatorCheck(Long userId, Long eventId) {
+        Event event = eventJpaRepository.findById(eventId).orElseThrow(EventNotFoundException::new);
+        User user = userJpaRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        if (!event.getInitiator().equals(user)) throw new RuntimeException();// TODO правильное исключение
+        return event;
+    }
+
+    public ParticipationRequest confirmParticipationRequestOfUser(Long userId, Long eventId, Long reqId) {
+            participationRequestJpaRepository.findById(reqId)
+                    .orElseThrow(ParticipationRequestNotFoundException::new);
+            Event event = eventJpaRepository.findById(eventId)
+                    .orElseThrow(EventNotFoundException::new);
+           return null; //TODO допилить
+
+    }
+
+    public Event cancelEventAddedByCurrentUser(Long userId, Long eventId) {
+        Event event = eventInitiatorCheck(userId, eventId);
+        event.setState(State.CANCELED);
+        return eventJpaRepository.save(event);
+    }
+
+    public ParticipationRequest rejectParticipationRequestOfUser(Long userId, Long eventId, Long reqId) {
+        Event event = eventInitiatorCheck(userId, eventId);
+        ParticipationRequest participationRequest = participationRequestJpaRepository.findById(reqId).orElseThrow(ParticipationRequestNotFoundException::new);
+        if (!event.equals(participationRequest.getEvent())) throw new RuntimeException(); //TODO правильное исключение
+        participationRequest.setStatus(Status.REJECTED);
+        return participationRequestJpaRepository.save(participationRequest);
     }
 }

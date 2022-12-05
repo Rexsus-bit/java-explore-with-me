@@ -2,6 +2,8 @@ package ru.practicum.explorewithme.model.participationrequest;
 
 import lombok.*;
 import ru.practicum.explorewithme.model.Status;
+import ru.practicum.explorewithme.model.event.Event;
+import ru.practicum.explorewithme.model.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,15 +16,18 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 @Entity
-@Table(name = "locations")
+@Table(name = "participation_request")
 public class ParticipationRequest {
 
     private  LocalDateTime created;
-    private  Long event;
+    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "event_id")
+    private Event event;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
-    private  Long requester;
+    private Long id;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private User requester;
     @Enumerated(EnumType.STRING)
     private Status status;
 
