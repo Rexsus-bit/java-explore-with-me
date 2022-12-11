@@ -115,10 +115,12 @@ public class UserService {
     }
 
     public ParticipationRequest confirmParticipationRequestOfUser(Long userId, Long eventId, Long reqId) {
-            participationRequestJpaRepository.findById(reqId)
+        Event event = eventInitiatorCheck(userId, eventId);
+
+        ParticipationRequest participationRequest = participationRequestJpaRepository.findById(reqId)
                     .orElseThrow(ParticipationRequestNotFoundException::new);
-            Event event = eventJpaRepository.findById(eventId)
-                    .orElseThrow(EventNotFoundException::new);
+
+
            return null; //TODO допилить
 
     }
