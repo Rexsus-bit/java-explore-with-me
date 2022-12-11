@@ -12,6 +12,7 @@ import ru.practicum.explorewithme.model.event.*;
 import ru.practicum.explorewithme.model.participationrequest.ParticipationRequest;
 import ru.practicum.explorewithme.model.participationrequest.ParticipationRequestDto;
 import ru.practicum.explorewithme.service.UserService;
+import ru.practicum.explorewithme.statisticclient.StatisticClient;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class UserEventsController {
 
     private final UserService userService;
+    private final StatisticClient statisticClient;
 
     @GetMapping("/{userId}/events")
     public List<EventShortDto> getEventsOfUser(@PathVariable Long userId,
@@ -43,6 +45,8 @@ public class UserEventsController {
 
     @PostMapping("/{userId}/events")
     public EventFullDto createEvent(@PathVariable Long userId, @Valid @RequestBody NewEventDto newEventDto) {
+        statisticClient.sendStatisticsInfo("1","2","3");// TODO убрать потом
+
         Event event = userService.createEvent(userId, newEventDto);
         return EventMapper.toEventFullDto(event);
     }
