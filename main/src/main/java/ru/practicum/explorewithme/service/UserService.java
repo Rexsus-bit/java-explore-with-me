@@ -116,13 +116,25 @@ public class UserService {
 
     public ParticipationRequest confirmParticipationRequestOfUser(Long userId, Long eventId, Long reqId) {
         Event event = eventInitiatorCheck(userId, eventId);
-
         ParticipationRequest participationRequest = participationRequestJpaRepository.findById(reqId)
                     .orElseThrow(ParticipationRequestNotFoundException::new);
+        if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
+            return participationRequest;
+        }
 
-
-           return null; //TODO допилить
-
+        int quantity = participationRequestJpaRepository.findAllByStatusAndEvent(Status.CONFIRMED, event).size();
+        if (event.getParticipantLimit() > 0 && quantity >= event.getParticipantLimit()) {
+            throw new RuntimeException(); // TODO подумать над исключением
+        }
+        participationRequest.setStatus(Status.CONFIRMED);
+        participationRequest = participationRequestJpaRepository.save(participationRequest);
+        quantity++;
+        // если при подтверждении данной заявки, лимит заявок для события исчерпан, то все неподтверждённые заявки необходимо отклонить
+        if (quantity >= event.getParticipantLimit()) {
+            participationRequestJpaRepository.findAllByStatusAndEvent(Status.PENDING, event)
+                    .stream().peek(r -> r.setStatus(Status.CANCELED)).forEach(participationRequestJpaRepository::save);
+        }
+        return participationRequest;
     }
 
     public Event cancelEventAddedByCurrentUser(Long userId, Long eventId) {

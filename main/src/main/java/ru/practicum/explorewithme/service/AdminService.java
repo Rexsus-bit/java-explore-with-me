@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.exceptions.CategoryNotFoundException;
 import ru.practicum.explorewithme.exceptions.CompilationNotFoundException;
+import ru.practicum.explorewithme.exceptions.ValidationException;
 import ru.practicum.explorewithme.model.category.Category;
 import ru.practicum.explorewithme.model.compilation.Compilation;
 import ru.practicum.explorewithme.model.compilation.NewCompilationDto;
@@ -36,17 +36,15 @@ public class AdminService {
     public List<Event> findEvents(List<Long> users, List<State> states, List<Long> categories, LocalDateTime rangeStart
             , LocalDateTime rangeEnd, Integer from, Integer size) {
 
-        if (rangeStart == null) rangeStart = LocalDateTime.MIN;
-        if (rangeEnd == null) rangeEnd = LocalDateTime.MAX;
-        if (rangeEnd.isBefore(rangeStart)) throw new RuntimeException();
+        if (rangeStart != null && rangeEnd!= null && rangeEnd.isBefore(rangeStart)) throw new RuntimeException();
         // TODO прорботать исключение ("start must be before end")
 
         return eventCriteriaRepository.findEventsByCustomCriteria(users, states, categories, rangeStart, rangeEnd, from, size, null);
     }
 
     @Transactional
-    public User addUser(NewUserRequest newUserRequest) {
-        User user = modelMapper.map(newUserRequest, User.class);
+    public User addUser(User user) {
+        if (null != userJpaRepository.findByName(user.getName())) throw new ValidationException();
         return userJpaRepository.save(user);
 
     }
@@ -71,12 +69,18 @@ public class AdminService {
 
     @Transactional
     public Category addNewCategory(Category category) {
+        categoryNameCheck(category);
         return categoryJpaRepository.save(category);
     }
 
     @Transactional
-    public Category changeCategory(Category category) {
+    public Category updateCategory(Category category) {
+        categoryNameCheck(category);
         return categoryJpaRepository.save(category);
+    }
+
+    private void categoryNameCheck(Category category) {
+        if (null != categoryJpaRepository.findByName(category.getName())) throw new ValidationException(); // TODO запихнуть в контролер фвмшсу
     }
 
     @Transactional

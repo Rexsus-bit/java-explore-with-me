@@ -20,7 +20,7 @@ public class Event {
     @Column(length = 1024)
     private String annotation;
     @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "category_id")
+//    @JoinColumn(name = "id")
     private Category category;
     private Long confirmedRequests;
     private LocalDateTime createdOn;
@@ -29,6 +29,7 @@ public class Event {
     private LocalDateTime eventDate;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name="event_id") // TODO костыль
     private Long id;
     @ManyToOne(cascade = CascadeType.ALL)
 //    @JoinColumn(name = "initiator_id")

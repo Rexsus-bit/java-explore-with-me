@@ -6,8 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.mapper.CompilationMapper;
 import ru.practicum.explorewithme.mapper.EventMapper;
@@ -24,7 +22,6 @@ import ru.practicum.explorewithme.model.event.State;
 import ru.practicum.explorewithme.model.user.NewUserRequest;
 import ru.practicum.explorewithme.model.user.User;
 import ru.practicum.explorewithme.model.user.UserDto;
-import ru.practicum.explorewithme.model.user.UserShortDto;
 import ru.practicum.explorewithme.service.AdminService;
 
 import java.time.LocalDateTime;
@@ -43,10 +40,10 @@ public class AdminController {
 
     @GetMapping("/events")
     public List<EventFullDto> findEvents(@RequestParam List<Long> users, // TODO required false?
-                                                         @RequestParam List<State> states,
-                                                         @RequestParam List<Long> categories,
-                                                         @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart, // TODO что будет если убрать формат?
-                                                         @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
+                                                         @RequestParam (required = false) List<State> states,
+                                                         @RequestParam (required = false) List<Long> categories,
+                                                         @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart, // TODO что будет если убрать формат?
+                                                         @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
                                                          @RequestParam(defaultValue = "0") Integer from,
                                                          @RequestParam(defaultValue = "10") Integer size
     ) {
@@ -72,8 +69,8 @@ public class AdminController {
     }
 
     @PatchMapping("/categories")
-    public CategoryDto changeCategory(@RequestBody CategoryDto categoryDto) {
-        Category category = adminService.changeCategory(modelMapper.map(categoryDto, Category.class));
+    public CategoryDto updateCategory(@RequestBody CategoryDto categoryDto) {
+        Category category = adminService.updateCategory(modelMapper.map(categoryDto, Category.class));
         return modelMapper.map(category, CategoryDto.class);
     }
 
@@ -100,7 +97,7 @@ public class AdminController {
 
     @PostMapping("/users")
     public UserDto addUser(@RequestBody NewUserRequest newUserRequest) {
-        User user = adminService.addUser(newUserRequest);
+        User user = adminService.addUser(modelMapper.map(newUserRequest, User.class));
         return modelMapper.map(user, UserDto.class);
     }
 

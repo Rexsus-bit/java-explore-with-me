@@ -13,6 +13,7 @@ import ru.practicum.explorewithme.model.event.EventShortDto;
 import ru.practicum.explorewithme.model.event.EventSortType;
 import ru.practicum.explorewithme.service.publicservices.EventService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,14 +38,16 @@ public class EventsController {
                                          @RequestParam(defaultValue = "false") Boolean onlyAvailable,
                                          @RequestParam(required = false) EventSortType sort,
                                          @RequestParam(defaultValue = "0") Integer from,
-                                         @RequestParam(defaultValue = "10") Integer size
+                                         @RequestParam(defaultValue = "10") Integer size,
+                                         HttpServletRequest request
     ) {
-        List<Event> events = eventService.getEvents(text, categories, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+        List<Event> events = eventService.getEvents(text, categories, rangeStart, rangeEnd, onlyAvailable, sort, from,
+                size, request);
         return events.stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public EventFullDto getEventById(@PathVariable Long id) {
-        return EventMapper.toEventFullDto(eventService.getEventById(id));
+    public EventFullDto getEventById(@PathVariable Long id, HttpServletRequest request) {
+        return EventMapper.toEventFullDto(eventService.getEventById(id, request));
     }
 }

@@ -14,14 +14,14 @@ interface StatisticsJpaRepository extends JpaRepository<EndpointHit, Long> {
     @Query(" SELECT e.app AS app, e.uri AS uri, COUNT(e.id) AS hits " +
             "FROM EndpointHit e " +
             " WHERE e.uri IN :uris " +
-            " AND e.timeStamp BETWEEN :start AND :end " +
+            " AND e.timestamp BETWEEN :start AND :end " +
             " GROUP BY e.app, e.uri, e.ip ")
     List<ViewStats> getStatsByCriteriaUnique(LocalDateTime start, LocalDateTime end, List<String> uris);
 
     @Query(" SELECT e.app AS app, e.uri AS uri, COUNT(e.id) AS hits " +
             "FROM EndpointHit e " +
             " WHERE e.uri IN :uris " +
-            " AND e.timeStamp BETWEEN :start AND :end " +
+            " AND e.timestamp BETWEEN :start AND :end " +
             " GROUP BY e.app, e.uri ")
     List<ViewStats> getStatsByCriteria(LocalDateTime start,LocalDateTime end, List<String> uris);
 

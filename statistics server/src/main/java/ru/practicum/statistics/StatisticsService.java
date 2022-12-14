@@ -16,7 +16,6 @@ public class StatisticsService {
     private final StatisticsJpaRepository statisticsJpaRepository;
 
     public void saveStatisticsInfo(EndpointHit endpointHit) {
-        endpointHit.setTimeStamp(LocalDateTime.now());
         statisticsJpaRepository.save(endpointHit);
     }
 
