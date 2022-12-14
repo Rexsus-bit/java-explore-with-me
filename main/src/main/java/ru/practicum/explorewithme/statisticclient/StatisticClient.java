@@ -24,7 +24,8 @@ public class StatisticClient {
     }
 
    public void sendStatisticsInfo (String app, String uri, String ip){
-        final HttpEntity<EndpointHitDto> request = new HttpEntity<>( new EndpointHitDto(app, uri, ip));
+        HttpEntity<EndpointHitDto> request = new HttpEntity<>( new EndpointHitDto(null
+                , app, uri, ip, LocalDateTime.now()));
         restTemplate.postForObject(url + "/hit", request, EndpointHitDto.class);
     }
 
