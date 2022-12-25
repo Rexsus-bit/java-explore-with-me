@@ -28,7 +28,6 @@ public class EventService {
     public List<Event> getEvents(String text, List<Long> categories, LocalDateTime rangeStart
             , LocalDateTime rangeEnd, Boolean onlyAvailable, EventSortType sort, Integer from, Integer size
             , HttpServletRequest request) {
-
         statisticClient.sendStatisticsInfo(appName, request.getRequestURI()
                 , request.getRemoteAddr());
 
@@ -49,8 +48,6 @@ public class EventService {
                 return a.getConfirmedRequests() < a.getParticipantLimit();
             }).collect(Collectors.toList());
         } else return events;
-
-
     }
 
     public Event getEventById(Long id, HttpServletRequest request) {

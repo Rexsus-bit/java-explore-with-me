@@ -16,20 +16,20 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 @Entity
-@Table(name = "participation_request")
+@Table(name = "participation_requests")
 public class ParticipationRequest {
 
     private  LocalDateTime created;
     @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "event_id")
     private Event event;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "requester_id")
     private User requester;
     @Enumerated(EnumType.STRING)
     private Status status;
-
 
 }
