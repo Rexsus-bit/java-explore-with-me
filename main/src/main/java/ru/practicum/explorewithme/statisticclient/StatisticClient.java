@@ -15,7 +15,6 @@ import java.util.*;
 @Service
 public class StatisticClient {
 
-
     private final RestTemplate restTemplate;
     private final String url = "http://localhost:9090";
 
@@ -26,12 +25,14 @@ public class StatisticClient {
    public void sendStatisticsInfo (String app, String uri, String ip){
         HttpEntity<EndpointHitDto> request = new HttpEntity<>( new EndpointHitDto(null
                 , app, uri, ip, LocalDateTime.now()));
+
+
+
         restTemplate.postForObject(url + "/hit", request, EndpointHitDto.class);
     }
 
-
-
-    List<ViewStats> getStatistic(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique){
+    List<ViewStats> getStatistic(LocalDateTime start, LocalDateTime end, List<String> uris
+            , Boolean unique){
         Map<String, String> vars = new HashMap<>();
         vars.put("start", start.toString());
         vars.put("end", end.toString());
@@ -40,8 +41,5 @@ public class StatisticClient {
         ViewStats[] viewStats = restTemplate.getForObject(url + "/stats", ViewStats[].class, vars);
         return new ArrayList<ViewStats>(Arrays.asList(viewStats));
     }
-
-
-
 
 }

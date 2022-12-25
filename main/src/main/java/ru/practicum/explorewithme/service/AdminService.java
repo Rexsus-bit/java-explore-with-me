@@ -14,7 +14,6 @@ import ru.practicum.explorewithme.model.compilation.NewCompilationDto;
 import ru.practicum.explorewithme.model.event.AdminUpdateEventRequest;
 import ru.practicum.explorewithme.model.event.Event;
 import ru.practicum.explorewithme.model.event.State;
-import ru.practicum.explorewithme.model.user.NewUserRequest;
 import ru.practicum.explorewithme.model.user.User;
 import ru.practicum.explorewithme.repository.*;
 import ru.practicum.explorewithme.util.OffsetLimitPageable;
@@ -80,7 +79,7 @@ public class AdminService {
     }
 
     private void categoryNameCheck(Category category) {
-        if (null != categoryJpaRepository.findByName(category.getName())) throw new ValidationException(); // TODO запихнуть в контролер фвмшсу
+        if (null != categoryJpaRepository.findByName(category.getName())) throw new ValidationException(); // TODO запихнуть в контролер
     }
 
     @Transactional
@@ -141,6 +140,8 @@ public class AdminService {
 
     @Transactional
     public void deleteCompilation(Long compId) {
+
+//        eventJpaRepository.deleteAllByCompilationId(compId);
         categoryJpaRepository.deleteById(compId);
     }
 

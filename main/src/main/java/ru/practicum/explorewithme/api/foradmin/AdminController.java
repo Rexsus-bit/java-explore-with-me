@@ -24,6 +24,7 @@ import ru.practicum.explorewithme.model.user.User;
 import ru.practicum.explorewithme.model.user.UserDto;
 import ru.practicum.explorewithme.service.AdminService;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,13 +70,13 @@ public class AdminController {
     }
 
     @PatchMapping("/categories")
-    public CategoryDto updateCategory(@RequestBody CategoryDto categoryDto) {
+    public CategoryDto updateCategory(@Valid @RequestBody CategoryDto categoryDto) {
         Category category = adminService.updateCategory(modelMapper.map(categoryDto, Category.class));
         return modelMapper.map(category, CategoryDto.class);
     }
 
     @PostMapping("/categories")
-    public CategoryDto addNewCategory(@RequestBody NewCategoryDto newCategoryDto) {
+    public CategoryDto addNewCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
         Category category = adminService.addNewCategory(modelMapper.map(newCategoryDto, Category.class));
         return modelMapper.map(category, CategoryDto.class);
     }
@@ -96,7 +97,7 @@ public class AdminController {
     }
 
     @PostMapping("/users")
-    public UserDto addUser(@RequestBody NewUserRequest newUserRequest) {
+    public UserDto addUser(@Valid @RequestBody NewUserRequest newUserRequest) {
         User user = adminService.addUser(modelMapper.map(newUserRequest, User.class));
         return modelMapper.map(user, UserDto.class);
     }
@@ -107,7 +108,7 @@ public class AdminController {
     }
 
     @PostMapping("/compilations")
-    public CompilationDto addCompilation(@RequestBody NewCompilationDto newCompilationDto) {
+    public CompilationDto addCompilation(@Valid @RequestBody NewCompilationDto newCompilationDto) {
         Compilation compilation = adminService.addCompilation(newCompilationDto);
         return compilationMapper.toCompilationDto(compilation);
     }
