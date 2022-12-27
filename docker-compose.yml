@@ -1,15 +1,45 @@
-version: '3.1'
+version: '3.8'
 services:
   stats-server:
+    build: ./main
+    container_name: main-container
     ports:
       - "9090:9090"
+    depends_on:
+      - stats-db
+#    environment:
+#      - SHAREIT_SERVER_URL=http://server:9090
 
   stats-db:
     image: postgres:14-alpine
+    container_name: stats-db-container
+    ports:
+      - "6541:5432"
+#    environment:
+#      - POSTGRES_DB=ru-base
+#      - POSTGRES_USER=newuser
+#      - POSTGRES_PASSWORD=pass
+#    volumes:
+#      - ./data:/var/lib/postgresql/data
+
 
   ewm-service:
+    build: ./statserver
+    container_name: statserver-container
     ports:
       - "8080:8080"
+    depends_on:
+      - ewm-db
+      - stats-server
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ru-base
+#      - POSTGRES_USER=newuser
+#      - POSTGRES_PASSWORD=pass
 
   ewm-db:
     image: postgres:14-alpine
+    container_name: main-db-container
+    ports:
+      - "6541:5432"
+#    volumes:
+#    - ./data:/var/lib/postgresql/data
