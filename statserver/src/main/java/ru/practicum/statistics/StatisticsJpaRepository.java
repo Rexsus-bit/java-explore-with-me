@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import ru.practicum.statistics.model.EndpointHit;
 import ru.practicum.statistics.model.ViewStats;
 
-import javax.swing.text.View;
 import java.time.LocalDateTime;
 import java.util.List;
 

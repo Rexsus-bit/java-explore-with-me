@@ -12,8 +12,6 @@ public class StatisticsServerApplication {
 		SpringApplication.run(StatisticsServerApplication.class, args);
 	}
 
-
-
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();

@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.statisticclient;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,9 @@ import java.util.*;
 public class StatisticClient {
 
     private final RestTemplate restTemplate;
-    private final String url = "http://localhost:9090";
+
+    @Value("${statistics.url}")
+    private String url;
 
     public StatisticClient() {
         this.restTemplate = new RestTemplate();

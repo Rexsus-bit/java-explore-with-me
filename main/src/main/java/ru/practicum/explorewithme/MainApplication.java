@@ -13,7 +13,7 @@ import ru.practicum.explorewithme.statisticclient.StatisticClient;
 @RequiredArgsConstructor
 public class MainApplication {
 
-    private final StatisticClient statisticClient;
+//    private final StatisticClient statisticClient;
 
     public static void main(String[] args) {
         SpringApplication.run(MainApplication.class, args);
