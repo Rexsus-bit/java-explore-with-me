@@ -1,45 +1,47 @@
 version: '3.8'
 services:
   stats-server:
-    build: ./main
-    container_name: main-container
+    build: ./statserver
+    container_name: statserver-container
     ports:
       - "9090:9090"
     depends_on:
       - stats-db
-#    environment:
-#      - SHAREIT_SERVER_URL=http://server:9090
+    environment:
+      - URL=jdbc:postgresql://stats-db:5433/statsdb
+      - USER=ewm-newuser
+      - PASSWORD=pass
 
   stats-db:
     image: postgres:14-alpine
     container_name: stats-db-container
     ports:
-      - "6541:5432"
-#    environment:
-#      - POSTGRES_DB=ru-base
-#      - POSTGRES_USER=newuser
-#      - POSTGRES_PASSWORD=pass
-#    volumes:
-#      - ./data:/var/lib/postgresql/data
-
+      - "6541:5433"
+    environment:
+      - POSTGRES_DB=statsdb
+      - POSTGRES_USER=newuser
+      - POSTGRES_PASSWORD=pass
 
   ewm-service:
-    build: ./statserver
-    container_name: statserver-container
+    build: ./main
+    container_name: main-container
     ports:
       - "8080:8080"
     depends_on:
       - ewm-db
       - stats-server
-#    environment:
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ru-base
-#      - POSTGRES_USER=newuser
-#      - POSTGRES_PASSWORD=pass
+    environment:
+      - EWM_STATS_DATASOURCE_URL=jdbc:postgresql://ewm-db:5434/explore
+      - EWM_STATS_POSTGRES_USER=exuser
+      - EWM_STATS_POSTGRES_PASSWORD=pass
+#      - EWM_STATS_SERVER_URL=http://stats-server:9090
 
   ewm-db:
     image: postgres:14-alpine
     container_name: main-db-container
     ports:
-      - "6541:5432"
-#    volumes:
-#    - ./data:/var/lib/postgresql/data
+      - "6542:5434"
+    environment:
+      - POSTGRES_DB=explore
+      - POSTGRES_USER=exuser
+      - POSTGRES_PASSWORD=pass
