@@ -23,7 +23,7 @@ CREATE TABLE compilations
 CREATE TABLE events
 (
     annotation         varchar,
-    category_id        bigint REFERENCES categories (id) ON DELETE SET NULL ,
+    category_id        bigint REFERENCES categories (id) ON DELETE NO ACTION,
     confirmed_requests bigint,
     created_on         timestamp,
     description        varchar,
