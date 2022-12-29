@@ -25,14 +25,14 @@ public class EventService {
 
     private final String appName = "Event application";
 
-    public List<Event> getEvents(String text, List<Long> categories, LocalDateTime rangeStart
-            , LocalDateTime rangeEnd, Boolean onlyAvailable, EventSortType sort, Integer from, Integer size
-            , HttpServletRequest request) {
+    public List<Event> getEvents(String text, List<Long> categories, LocalDateTime rangeStart,
+                                 LocalDateTime rangeEnd, Boolean onlyAvailable, EventSortType sort, Integer from,
+                                 Integer size, HttpServletRequest request) {
         statisticClient.sendStatisticsInfo(appName, request.getRequestURI()
                 , request.getRemoteAddr());
 
-        List<Event> events = eventCriteriaRepository.findEventsByCustomCriteria(null, null, categories
-                , rangeStart, rangeEnd, from, size, text);
+        List<Event> events = eventCriteriaRepository.findEventsByCustomCriteria(null, null, categories,
+                rangeStart, rangeEnd, from, size, text);
         if (sort == null) sort = EventSortType.VIEWS;// TODO оптимизировать
         if (sort.equals(EventSortType.VIEWS)) {
             events = events.stream().sorted(Comparator.comparing(Event::getViews))

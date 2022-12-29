@@ -3,12 +3,10 @@ package ru.practicum.explorewithme.api.forpublic;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.mapper.CompilationMapper;
 import ru.practicum.explorewithme.model.compilation.Compilation;
 import ru.practicum.explorewithme.model.compilation.CompilationDto;
-import ru.practicum.explorewithme.repository.CompilationJpaRepository;
 import ru.practicum.explorewithme.service.publicservices.CompilationService;
 
 import java.util.List;

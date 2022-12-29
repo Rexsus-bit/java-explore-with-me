@@ -30,8 +30,8 @@ public class AdminService {
     private final EventCriteriaRepository eventCriteriaRepository;
     private final ModelMapper modelMapper;
 
-    public List<Event> findEvents(List<Long> users, List<State> states, List<Long> categories, LocalDateTime rangeStart
-            , LocalDateTime rangeEnd, Integer from, Integer size) {
+    public List<Event> findEvents(List<Long> users, List<State> states, List<Long> categories, LocalDateTime rangeStart,
+                                  LocalDateTime rangeEnd, Integer from, Integer size) {
         if (rangeStart != null && rangeEnd != null && rangeEnd.isBefore(rangeStart))
             throw new ValidationException();
         return eventCriteriaRepository
@@ -91,7 +91,6 @@ public class AdminService {
     }
 
     private Event updateEvent(Event event, AdminUpdateEventRequest adminUpdateEventRequest) {
-
         if (adminUpdateEventRequest.getAnnotation() != null) event.setAnnotation(adminUpdateEventRequest
                 .getAnnotation());
         if (adminUpdateEventRequest.getCategory() != null) event.setCategory(categoryJpaRepository

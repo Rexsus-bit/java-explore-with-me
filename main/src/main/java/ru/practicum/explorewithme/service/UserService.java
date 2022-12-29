@@ -49,7 +49,7 @@ public class UserService {
         return eventJpaRepository.save(event);
     }
 
-    private void updateEvent(Event event, UpdateEventRequest updateEventRequest){
+    private void updateEvent(Event event, UpdateEventRequest updateEventRequest) {
         if (updateEventRequest.getAnnotation() != null) event.setAnnotation(updateEventRequest.getAnnotation());
         if (updateEventRequest.getCategory() != null) event.setCategory(categoryJpaRepository
                 .findById(updateEventRequest.getCategory())
@@ -114,7 +114,7 @@ public class UserService {
     public ParticipationRequest confirmParticipationRequestOfUser(Long userId, Long eventId, Long reqId) {
         Event event = eventInitiatorCheck(userId, eventId);
         ParticipationRequest participationRequest = participationRequestJpaRepository.findById(reqId)
-                    .orElseThrow(ParticipationRequestNotFoundException::new);
+                .orElseThrow(ParticipationRequestNotFoundException::new);
         if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
             return participationRequest;
         }
