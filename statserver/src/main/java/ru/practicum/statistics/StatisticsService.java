@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.practicum.statistics.model.EndpointHit;
 import ru.practicum.statistics.model.ViewStats;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 

@@ -16,7 +16,7 @@ public class CategoryService {
     private final CategoryJpaRepository categoryJpaRepository;
 
     public Category getCategoryById(Long catId) {
-       return categoryJpaRepository.findById(catId).orElseThrow( CategoryNotFoundException::new); // TODO настроить исключения
+        return categoryJpaRepository.findById(catId).orElseThrow(CategoryNotFoundException::new);
     }
 
     public List<Category> getCategories(Integer from, Integer size) {

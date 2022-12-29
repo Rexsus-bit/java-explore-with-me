@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Table(name = "participation_requests")
 public class ParticipationRequest {
 
-    private  LocalDateTime created;
+    private LocalDateTime created;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "event_id")
     private Event event;

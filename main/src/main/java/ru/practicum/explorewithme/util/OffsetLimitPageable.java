@@ -3,7 +3,6 @@ package ru.practicum.explorewithme.util;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 
 import javax.validation.ValidationException;
 import java.util.Optional;

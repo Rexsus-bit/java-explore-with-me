@@ -33,16 +33,14 @@ services:
     ports:
       - "8080:8080"
       - "5006:5006"
-    volumes:
-      - ./data:/var/lib/postgresql/data
     depends_on:
       - ewm-db
       - stats-server
     environment:
-      - EWM_STATS_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/explore
-      - EWM_STATS_POSTGRES_USER=exuser
-      - EWM_STATS_POSTGRES_PASSWORD=pass
-      - EWM_STATS_SERVER_URL=http://stats-server:9090
+      - EWM_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/explore
+      - EWM_POSTGRES_USER=exuser
+      - EWM_POSTGRES_PASSWORD=pass
+      - STATS_SERVER_URL=http://stats-server:9090
       - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006
 
   ewm-db:
@@ -50,6 +48,8 @@ services:
     container_name: main-db-container
     ports:
       - "6542:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=explore
       - POSTGRES_USER=exuser

@@ -1,4 +1,5 @@
-DROP TABLE IF EXISTS users, categories, compilations, events, locations, participation_requests, compilations_events_matches;
+DROP TABLE IF EXISTS users, categories, compilations, events, locations, participation_requests,
+    compilations_events_matches, comments;
 
 CREATE TABLE users
 (
@@ -23,7 +24,7 @@ CREATE TABLE compilations
 CREATE TABLE events
 (
     annotation         varchar,
-    category_id        bigint REFERENCES categories (id) ON DELETE SET NULL ,
+    category_id        bigint REFERENCES categories (id) ON DELETE NO ACTION,
     confirmed_requests bigint,
     created_on         timestamp,
     description        varchar,
@@ -63,11 +64,20 @@ CREATE TABLE compilations_events_matches
     PRIMARY KEY (compilation_id, event_id)
 );
 
-ALTER TABLE events
-    ADD FOREIGN KEY (initiator_id) REFERENCES users (id) /*ON DELETE NO ACTION*/;
+CREATE TABLE comments
+(
+    comment_id   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    comment      varchar,
+    owner_id     bigint REFERENCES users (id) ON DELETE CASCADE,
+    event_id     bigint REFERENCES events (event_id)  ON DELETE CASCADE,
+    comment_date timestamp
+);
 
 ALTER TABLE events
-    ADD FOREIGN KEY (location_id) REFERENCES locations (id) /*ON DELETE NO ACTION*/;
+    ADD FOREIGN KEY (initiator_id) REFERENCES users (id) ON DELETE CASCADE;
+
+ALTER TABLE events
+    ADD FOREIGN KEY (location_id) REFERENCES locations (id) ON DELETE RESTRICT;
 
 ALTER TABLE participation_requests
     ADD FOREIGN KEY (event_id) REFERENCES events (event_id)  ON DELETE CASCADE;

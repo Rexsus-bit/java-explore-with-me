@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface ParticipationRequestJpaRepository extends JpaRepository<ParticipationRequest, Long> {
 
-    List<ParticipationRequest> findAllByRequester_Id(long requester_id);
+    List<ParticipationRequest> findAllByRequester_Id(long requesterId);
 
     List<ParticipationRequest> findByEvent(Event event);
 

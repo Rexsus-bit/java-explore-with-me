@@ -5,8 +5,8 @@ import ru.practicum.explorewithme.model.participationrequest.ParticipationReques
 
 public class ParticipationRequestMapper {
 
-    public static ParticipationRequestDto toParticipationRequestDto(ParticipationRequest participationRequest){
-       return ParticipationRequestDto.builder()
+    public static ParticipationRequestDto toParticipationRequestDto(ParticipationRequest participationRequest) {
+        return ParticipationRequestDto.builder()
                 .created(participationRequest.getCreated())
                 .event(participationRequest.getEvent().getId())
                 .id(participationRequest.getId())
@@ -14,5 +14,4 @@ public class ParticipationRequestMapper {
                 .status(participationRequest.getStatus().toString())
                 .build();
     }
-
 }

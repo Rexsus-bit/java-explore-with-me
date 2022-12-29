@@ -2,13 +2,11 @@ package ru.practicum.explorewithme.model.event;
 
 import lombok.*;
 import ru.practicum.explorewithme.model.category.Category;
-import ru.practicum.explorewithme.model.compilation.Compilation;
 import ru.practicum.explorewithme.model.location.Location;
 import ru.practicum.explorewithme.model.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -21,7 +19,7 @@ public class Event {
 
     @Column(length = 1024)
     private String annotation;
-    @ManyToOne/*(cascade = CascadeType.ALL)*/
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private Category category;
     @Column(name = "confirmed_requests")
@@ -30,11 +28,11 @@ public class Event {
     private LocalDateTime createdOn;
     @Column(length = 10000)
     private String description;
-    @Column(name = "event_date"/*, nullable = false*/)
+    @Column(name = "event_date")
     private LocalDateTime eventDate;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="event_id")
+    @Column(name = "event_id")
     private Long id;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "initiator_id")
@@ -45,9 +43,9 @@ public class Event {
     private Boolean paid;
     @Column(name = "participant_limit")
     private Integer participantLimit;
-    @Column(name="published_on")
+    @Column(name = "published_on")
     private LocalDateTime publishedOn;
-    @Column(name="request_moderation")
+    @Column(name = "request_moderation")
     private Boolean requestModeration;
     @Enumerated(EnumType.STRING)
     private State state;

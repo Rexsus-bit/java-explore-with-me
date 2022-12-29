@@ -22,6 +22,6 @@ interface StatisticsJpaRepository extends JpaRepository<EndpointHit, Long> {
             " WHERE e.uri IN :uris " +
             " AND e.timestamp BETWEEN :start AND :end " +
             " GROUP BY e.app, e.uri ")
-    List<ViewStats> getStatsByCriteria(LocalDateTime start,LocalDateTime end, List<String> uris);
+    List<ViewStats> getStatsByCriteria(LocalDateTime start, LocalDateTime end, List<String> uris);
 
 }

@@ -3,8 +3,6 @@ package ru.practicum.explorewithme.api.forpublic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.mapper.EventMapper;
 import ru.practicum.explorewithme.model.event.Event;
@@ -26,7 +24,6 @@ import java.util.stream.Collectors;
 public class EventsController {
 
     private final EventService eventService;
-
 
     @GetMapping
     public List<EventShortDto> getEvents(@RequestParam(required = false) String text,
