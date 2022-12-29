@@ -43,12 +43,13 @@ public class EventCriteriaRepository {
             predicates.add(cb.between(root.get("eventDate"), rangeStart, rangeEnd));
         }
         if (text != null) {
-            predicates.add(cb.or(cb.like(cb.upper(root.get("annotation")), "%" + text.toUpperCase() + "%")
-                    , cb.like(cb.upper(root.get("description")), "%" + text.toUpperCase() + "%")));
+            predicates.add(cb.or(cb.like(cb.upper(root.get("annotation")),
+                    "%" + text.toUpperCase() + "%"), cb.like(cb.upper(root.get("description")),
+                    "%" + text.toUpperCase() + "%")));
         }
 
         return entityManager.createQuery(query.select(root)
-                        .where(cb.and(predicates.toArray(new Predicate[]{})))/*.groupBy()*/)
+                        .where(cb.and(predicates.toArray(new Predicate[]{}))))
                 .setFirstResult(from).setMaxResults(size).getResultList();
     }
 }

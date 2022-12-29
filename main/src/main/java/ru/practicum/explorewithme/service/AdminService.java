@@ -112,9 +112,10 @@ public class AdminService {
     @Transactional
     public Event publishEvent(Long eventId) {
         Event event = eventJpaRepository.findById(eventId).orElseThrow(CategoryNotFoundException::new);
-        if (event.getState().equals(State.PENDING) && event.getEventDate()
-                .isAfter(LocalDateTime.now().plusHours(1))) {
-        } else throw new ValidationException();
+        if (!(event.getState().equals(State.PENDING) && event.getEventDate()
+                .isAfter(LocalDateTime.now().plusHours(1)))) {
+            throw new ValidationException();
+        }
         event.setState(State.PUBLISHED);
         event.setPublishedOn(LocalDateTime.now());
         return eventJpaRepository.save(event);

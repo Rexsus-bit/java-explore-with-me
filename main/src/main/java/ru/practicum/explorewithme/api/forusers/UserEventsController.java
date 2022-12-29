@@ -80,9 +80,9 @@ public class UserEventsController {
     }
 
     @GetMapping("/{userId}/requests")
-    public List<ParticipationRequestDto> getInformationOnParticipationRequestsOfUser //
-    (@PathVariable Long userId) {
-        List<ParticipationRequest> participationRequestList = userService.getInformationOnParticipationRequestsOfUser(userId);
+    public List<ParticipationRequestDto> getInformationOnParticipationRequestsOfUser(@PathVariable Long userId) {
+        List<ParticipationRequest> participationRequestList = userService
+                .getInformationOnParticipationRequestsOfUser(userId);
         return participationRequestList.stream()
                 .map(ParticipationRequestMapper::toParticipationRequestDto)
                 .collect(Collectors.toList());
