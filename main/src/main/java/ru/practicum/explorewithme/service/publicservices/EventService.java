@@ -34,16 +34,16 @@ public class EventService {
         List<Event> events = eventCriteriaRepository.findEventsByCustomCriteria(null, null, categories
                 , rangeStart, rangeEnd, from, size, text);
         if (sort == null) sort = EventSortType.VIEWS;// TODO оптимизировать
-        if (sort.equals(EventSortType.VIEWS)){
+        if (sort.equals(EventSortType.VIEWS)) {
             events = events.stream().sorted(Comparator.comparing(Event::getViews))
                     .collect(Collectors.toList());
         }
-        if (sort.equals(EventSortType.EVENT_DATE)){
+        if (sort.equals(EventSortType.EVENT_DATE)) {
             events = events.stream().sorted(Comparator.comparing(Event::getEventDate))
                     .collect(Collectors.toList());
         }
         if (onlyAvailable) {
-           return events.stream().filter(a -> {
+            return events.stream().filter(a -> {
                 if (a.getParticipantLimit() == null || a.getParticipantLimit() == 0) return false;
                 return a.getConfirmedRequests() < a.getParticipantLimit();
             }).collect(Collectors.toList());
@@ -53,6 +53,6 @@ public class EventService {
     public Event getEventById(Long id, HttpServletRequest request) {
         statisticClient.sendStatisticsInfo(appName, request.getRequestURI()
                 , request.getRemoteAddr());
-       return eventJpaRepository.findById(id).orElseThrow(EventNotFoundException::new);
+        return eventJpaRepository.findById(id).orElseThrow(EventNotFoundException::new);
     }
 }

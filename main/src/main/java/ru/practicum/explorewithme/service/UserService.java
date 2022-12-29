@@ -5,10 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.explorewithme.exceptions.CategoryNotFoundException;
-import ru.practicum.explorewithme.exceptions.EventNotFoundException;
-import ru.practicum.explorewithme.exceptions.ParticipationRequestNotFoundException;
-import ru.practicum.explorewithme.exceptions.UserNotFoundException;
+import ru.practicum.explorewithme.exceptions.*;
 import ru.practicum.explorewithme.model.Status;
 import ru.practicum.explorewithme.model.event.*;
 import ru.practicum.explorewithme.model.participationrequest.ParticipationRequest;
@@ -92,7 +89,7 @@ public class UserService {
         ParticipationRequest participationRequest = participationRequestJpaRepository.findById(requestId)
                 .orElseThrow(ParticipationRequestNotFoundException::new);
         User user = userJpaRepository.findById(userId).orElseThrow(EventNotFoundException::new);
-        if (!participationRequest.getRequester().equals(user)) throw new RuntimeException(); // TODO Ошбика несовпадения
+        if (!participationRequest.getRequester().equals(user)) throw new ValidationException();
         participationRequest.setStatus(Status.CANCELED);
         return participationRequestJpaRepository.save(participationRequest);
 
@@ -110,7 +107,7 @@ public class UserService {
     private Event eventInitiatorCheck(Long userId, Long eventId) {
         Event event = eventJpaRepository.findById(eventId).orElseThrow(EventNotFoundException::new);
         User user = userJpaRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        if (!event.getInitiator().equals(user)) throw new RuntimeException();// TODO правильное исключение
+        if (!event.getInitiator().equals(user)) throw new ValidationException();
         return event;
     }
 
@@ -124,7 +121,7 @@ public class UserService {
 
         int quantity = participationRequestJpaRepository.findAllByStatusAndEvent(Status.CONFIRMED, event).size();
         if (event.getParticipantLimit() > 0 && quantity >= event.getParticipantLimit()) {
-            throw new RuntimeException(); // TODO подумать над исключением
+            throw new ValidationException();
         }
         participationRequest.setStatus(Status.CONFIRMED);
         participationRequest = participationRequestJpaRepository.save(participationRequest);
@@ -145,8 +142,9 @@ public class UserService {
 
     public ParticipationRequest rejectParticipationRequestOfUser(Long userId, Long eventId, Long reqId) {
         Event event = eventInitiatorCheck(userId, eventId);
-        ParticipationRequest participationRequest = participationRequestJpaRepository.findById(reqId).orElseThrow(ParticipationRequestNotFoundException::new);
-        if (!event.equals(participationRequest.getEvent())) throw new RuntimeException(); //TODO правильное исключение
+        ParticipationRequest participationRequest = participationRequestJpaRepository.findById(reqId)
+                .orElseThrow(ParticipationRequestNotFoundException::new);
+        if (!event.equals(participationRequest.getEvent())) throw new ValidationException();
         participationRequest.setStatus(Status.REJECTED);
         return participationRequestJpaRepository.save(participationRequest);
     }

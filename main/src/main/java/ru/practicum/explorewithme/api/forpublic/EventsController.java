@@ -27,7 +27,6 @@ public class EventsController {
 
     private final EventService eventService;
 
-
     @GetMapping
     public List<EventShortDto> getEvents(@RequestParam(required = false) String text,
                                          @RequestParam(required = false) List<Long> categories,

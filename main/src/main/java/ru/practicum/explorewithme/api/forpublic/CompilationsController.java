@@ -38,5 +38,4 @@ public class CompilationsController {
     public CompilationDto getCompilationId(@PathVariable Long compId) {
         return CompilationMapper.toCompilationDto(compilationService.getCompilationId(compId));
     }
-
 }
