@@ -2,7 +2,6 @@ package ru.practicum.explorewithme.model.compilation;
 
 import lombok.*;
 import ru.practicum.explorewithme.model.event.Event;
-import ru.practicum.explorewithme.model.event.EventShortDto;
 
 import javax.persistence.*;
 import java.util.List;

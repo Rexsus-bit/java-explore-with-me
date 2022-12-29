@@ -28,8 +28,7 @@ public class EventService {
     public List<Event> getEvents(String text, List<Long> categories, LocalDateTime rangeStart,
                                  LocalDateTime rangeEnd, Boolean onlyAvailable, EventSortType sort, Integer from,
                                  Integer size, HttpServletRequest request) {
-        statisticClient.sendStatisticsInfo(appName, request.getRequestURI()
-                , request.getRemoteAddr());
+        statisticClient.sendStatisticsInfo(appName, request.getRequestURI(), request.getRemoteAddr());
 
         List<Event> events = eventCriteriaRepository.findEventsByCustomCriteria(null, null, categories,
                 rangeStart, rangeEnd, from, size, text);
@@ -51,8 +50,7 @@ public class EventService {
     }
 
     public Event getEventById(Long id, HttpServletRequest request) {
-        statisticClient.sendStatisticsInfo(appName, request.getRequestURI()
-                , request.getRemoteAddr());
+        statisticClient.sendStatisticsInfo(appName, request.getRequestURI(), request.getRemoteAddr());
         return eventJpaRepository.findById(id).orElseThrow(EventNotFoundException::new);
     }
 }

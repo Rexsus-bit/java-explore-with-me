@@ -3,8 +3,6 @@ package ru.practicum.explorewithme.api.forusers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.mapper.EventMapper;
 import ru.practicum.explorewithme.mapper.ParticipationRequestMapper;
@@ -12,10 +10,8 @@ import ru.practicum.explorewithme.model.event.*;
 import ru.practicum.explorewithme.model.participationrequest.ParticipationRequest;
 import ru.practicum.explorewithme.model.participationrequest.ParticipationRequestDto;
 import ru.practicum.explorewithme.service.UserService;
-import ru.practicum.explorewithme.statisticclient.StatisticClient;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
