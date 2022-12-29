@@ -40,13 +40,15 @@ public class AdminController {
     private final CompilationMapper compilationMapper;
 
     @GetMapping("/events")
-    public List<EventFullDto> findEvents(@RequestParam List<Long> users, // TODO required false?
-                                                         @RequestParam (required = false) List<State> states,
-                                                         @RequestParam (required = false) List<Long> categories,
-                                                         @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart, // TODO что будет если убрать формат?
-                                                         @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
-                                                         @RequestParam(defaultValue = "0") Integer from,
-                                                         @RequestParam(defaultValue = "10") Integer size
+    public List<EventFullDto> findEvents(@RequestParam List<Long> users,
+                                         @RequestParam(required = false) List<State> states,
+                                         @RequestParam(required = false) List<Long> categories,
+                                         @RequestParam(required = false)
+                                             @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
+                                         @RequestParam(required = false)
+                                             @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
+                                         @RequestParam(defaultValue = "0") Integer from,
+                                         @RequestParam(defaultValue = "10") Integer size
     ) {
         List<Event> eventsList = adminService.findEvents(users, states, categories, rangeStart, rangeEnd, from, size);
         return eventsList.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
@@ -56,12 +58,12 @@ public class AdminController {
     public EventFullDto editEvent(@PathVariable Long eventId,
                                   @RequestBody AdminUpdateEventRequest adminUpdateEventRequest) {
         Event event = adminService.editEvent(eventId, adminUpdateEventRequest);
-        return  EventMapper.toEventFullDto(event);
+        return EventMapper.toEventFullDto(event);
     }
 
     @PatchMapping("/events/{eventId}/publish")
     public EventFullDto publishEvent(@PathVariable Long eventId) {
-        return  EventMapper.toEventFullDto(adminService.publishEvent(eventId));
+        return EventMapper.toEventFullDto(adminService.publishEvent(eventId));
     }
 
     @PatchMapping("/events/{eventId}/reject")
@@ -71,19 +73,21 @@ public class AdminController {
 
     @PatchMapping("/categories")
     public CategoryDto updateCategory(@Valid @RequestBody CategoryDto categoryDto) {
-        Category category = adminService.updateCategory(modelMapper.map(categoryDto, Category.class));
+        Category category = adminService
+                .updateCategory(modelMapper.map(categoryDto, Category.class));
         return modelMapper.map(category, CategoryDto.class);
     }
 
     @PostMapping("/categories")
     public CategoryDto addNewCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
-        Category category = adminService.addNewCategory(modelMapper.map(newCategoryDto, Category.class));
+        Category category = adminService
+                .addNewCategory(modelMapper.map(newCategoryDto, Category.class));
         return modelMapper.map(category, CategoryDto.class);
     }
 
     @DeleteMapping("/categories/{catId}")
     public void deleteCategory(@PathVariable Long catId) {
-            adminService.deleteCategory(catId);
+        adminService.deleteCategory(catId);
     }
 
     @GetMapping("/users")
@@ -119,12 +123,12 @@ public class AdminController {
     }
 
     @DeleteMapping("/compilations/{compId}/events/{eventId}")
-    public void deleteEventFromCompilation(@PathVariable Long compId, @PathVariable Long eventId) { // TODO подумать над возвращаемм типом
+    public void deleteEventFromCompilation(@PathVariable Long compId, @PathVariable Long eventId) {
         adminService.deleteEventFromCompilation(compId, eventId);
     }
 
     @PatchMapping("/compilations/{compId}/events/{eventId}")
-    public void addLinkEventToCompilation(@PathVariable Long compId, @PathVariable Long eventId) { //
+    public void addLinkEventToCompilation(@PathVariable Long compId, @PathVariable Long eventId) {
         adminService.addLinkEventToCompilation(compId, eventId);
     }
 
@@ -135,7 +139,7 @@ public class AdminController {
 
     @PatchMapping("/compilations/{compId}/pin")
     public void pinCompilation(@PathVariable Long compId) {
-       adminService.pinCompilation(compId);
+        adminService.pinCompilation(compId);
     }
 
 }

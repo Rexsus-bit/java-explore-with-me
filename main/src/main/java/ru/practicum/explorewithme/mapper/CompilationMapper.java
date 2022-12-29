@@ -30,7 +30,5 @@ public class CompilationMapper {
                 .title(compilation.getTitle())
                 .build();
 
-
-
     }
 }

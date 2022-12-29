@@ -14,5 +14,4 @@ public class ParticipationRequestMapper {
                 .status(participationRequest.getStatus().toString())
                 .build();
     }
-
 }

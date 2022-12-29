@@ -21,15 +21,15 @@ public class EventCriteriaRepository {
     private final EntityManager entityManager;
 
     public List<Event> findEventsByCustomCriteria(List<Long> users, List<State> states, List<Long> categories, LocalDateTime rangeStart
-            , LocalDateTime rangeEnd, Integer from, Integer size, String text){
+            , LocalDateTime rangeEnd, Integer from, Integer size, String text) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery <Event> query = cb.createQuery(Event.class);
+        CriteriaQuery<Event> query = cb.createQuery(Event.class);
         Root<Event> root = query.from(Event.class);
 
         List<Predicate> predicates = new ArrayList<>();
 
-        if (users != null){
+        if (users != null) {
             predicates.add(cb.in(root.get("initiator").get("id")).value(users));
         }
         if (states != null) {
@@ -41,19 +41,13 @@ public class EventCriteriaRepository {
         if (rangeStart != null && rangeEnd != null) {
             predicates.add(cb.between(root.get("eventDate"), rangeStart, rangeEnd));
         }
-        if (text != null){
+        if (text != null) {
             predicates.add(cb.or(cb.like(cb.upper(root.get("annotation")), "%" + text.toUpperCase() + "%")
                     , cb.like(cb.upper(root.get("description")), "%" + text.toUpperCase() + "%")));
         }
 
         return entityManager.createQuery(query.select(root)
-                .where(cb.and(predicates.toArray(new Predicate[]{})))/*.groupBy()*/)
+                        .where(cb.and(predicates.toArray(new Predicate[]{})))/*.groupBy()*/)
                 .setFirstResult(from).setMaxResults(size).getResultList();
-
     }
-
-
-
-
-
 }

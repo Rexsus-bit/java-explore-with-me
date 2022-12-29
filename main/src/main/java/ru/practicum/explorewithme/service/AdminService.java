@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.exceptions.CategoryNotFoundException;
 import ru.practicum.explorewithme.exceptions.CompilationNotFoundException;
+import ru.practicum.explorewithme.exceptions.UserNotFoundException;
 import ru.practicum.explorewithme.exceptions.ValidationException;
 import ru.practicum.explorewithme.model.category.Category;
 import ru.practicum.explorewithme.model.compilation.Compilation;
@@ -34,10 +35,7 @@ public class AdminService {
 
     public List<Event> findEvents(List<Long> users, List<State> states, List<Long> categories, LocalDateTime rangeStart
             , LocalDateTime rangeEnd, Integer from, Integer size) {
-
-        if (rangeStart != null && rangeEnd!= null && rangeEnd.isBefore(rangeStart)) throw new RuntimeException();
-        // TODO прорботать исключение ("start must be before end")
-
+        if (rangeStart != null && rangeEnd!= null && rangeEnd.isBefore(rangeStart)) throw new ValidationException();
         return eventCriteriaRepository.findEventsByCustomCriteria(users, states, categories, rangeStart, rangeEnd, from, size, null);
     }
 
@@ -45,7 +43,6 @@ public class AdminService {
     public User addUser(User user) {
         if (null != userJpaRepository.findByName(user.getName())) throw new ValidationException();
         return userJpaRepository.save(user);
-
     }
 
     @Transactional
@@ -61,7 +58,7 @@ public class AdminService {
 
     @Transactional
     public void deleteUsers(Long userId) {
-        userJpaRepository.findById(userId).orElseThrow(RuntimeException::new);
+        userJpaRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         userJpaRepository.deleteById(userId);
 
     }
