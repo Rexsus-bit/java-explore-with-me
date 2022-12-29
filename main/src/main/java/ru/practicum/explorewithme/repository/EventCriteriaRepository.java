@@ -20,8 +20,9 @@ public class EventCriteriaRepository {
 
     private final EntityManager entityManager;
 
-    public List<Event> findEventsByCustomCriteria(List<Long> users, List<State> states, List<Long> categories, LocalDateTime rangeStart
-            , LocalDateTime rangeEnd, Integer from, Integer size, String text) {
+    public List<Event> findEventsByCustomCriteria(List<Long> users, List<State> states, List<Long> categories,
+                                                  LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from,
+                                                  Integer size, String text) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Event> query = cb.createQuery(Event.class);

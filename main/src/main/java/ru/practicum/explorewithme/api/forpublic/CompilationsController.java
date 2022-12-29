@@ -22,9 +22,9 @@ public class CompilationsController {
 
     @GetMapping
     public List<CompilationDto> getCompilations(@RequestParam(required = false) Boolean pinned,
-                                                @RequestParam (defaultValue = "0") Integer from,
-                                                @RequestParam (defaultValue = "10") Integer size
-    ){
+                                                @RequestParam(defaultValue = "0") Integer from,
+                                                @RequestParam(defaultValue = "10") Integer size
+    ) {
 
         List<Compilation> compilationsList = compilationService.getCompilations(pinned, from, size);
         return compilationsList.stream().map(CompilationMapper::toCompilationDto)

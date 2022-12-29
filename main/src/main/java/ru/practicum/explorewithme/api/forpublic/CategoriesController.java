@@ -22,11 +22,10 @@ public class CategoriesController {
 
     @GetMapping
     public List<CategoryDto> getCategories(@RequestParam(defaultValue = "0") Integer from,
-                                           @RequestParam(defaultValue = "10") Integer size
-    ) {
-        return modelMapper.map(categoryService.getCategories(from, size)
-                , new TypeToken<List<CategoryDto>>() {
-                }.getType());
+                                           @RequestParam(defaultValue = "10") Integer size) {
+        return modelMapper.map(categoryService.getCategories(from, size),
+                new TypeToken<List<CategoryDto>>() {
+        }.getType());
     }
 
     @GetMapping("/{catId}")

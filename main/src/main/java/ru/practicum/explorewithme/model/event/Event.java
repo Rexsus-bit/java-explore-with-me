@@ -32,7 +32,7 @@ public class Event {
     private LocalDateTime eventDate;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="event_id")
+    @Column(name = "event_id")
     private Long id;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "initiator_id")
@@ -43,9 +43,9 @@ public class Event {
     private Boolean paid;
     @Column(name = "participant_limit")
     private Integer participantLimit;
-    @Column(name="published_on")
+    @Column(name = "published_on")
     private LocalDateTime publishedOn;
-    @Column(name="request_moderation")
+    @Column(name = "request_moderation")
     private Boolean requestModeration;
     @Enumerated(EnumType.STRING)
     private State state;

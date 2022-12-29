@@ -13,10 +13,10 @@ import java.time.format.DateTimeFormatter;
 
 @Configuration
 public class AppConfig {
-    
+
     private static final String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
     private static final String dateFormat = "yyyy-MM-dd";
-  
+
 
     @Bean
     public Jackson2ObjectMapperBuilder jsonCustomizer() {

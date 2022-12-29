@@ -23,7 +23,7 @@ public class Compilation {
     private List<Event> events;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="compilation_id")
+    @Column(name = "compilation_id")
     private Long id;
     private Boolean pinned;
     private String title;
