@@ -1,2 +1,2 @@
 # java-explore-with-me
-Template repository for ExploreWithMe project.
+Please see pull request https://github.com/Rexsus-bit/java-explore-with-me/pulls 

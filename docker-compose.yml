@@ -1,15 +1,56 @@
-version: '3.1'
+version: '3.8'
 services:
   stats-server:
+    build: ./statserver
+    container_name: statserver-container
     ports:
       - "9090:9090"
+      - "5005:5005"
+#    volumes:
+#      - ./data:/var/lib/postgresql/data
+    depends_on:
+      - stats-db
+    environment:
+      - URL=jdbc:postgresql://stats-db:5432/statsdbdocker
+      - USER=newuser1
+      - PASSWORD=pass
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
 
   stats-db:
     image: postgres:14-alpine
+    container_name: stats-db-container
+    ports:
+      - "6541:5432"
+      - "4004:4004"
+    environment:
+      - POSTGRES_DB=statsdbdocker
+      - POSTGRES_USER=newuser1
+      - POSTGRES_PASSWORD=pass
 
   ewm-service:
+    build: ./main
+    container_name: main-container
     ports:
       - "8080:8080"
+      - "5006:5006"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    depends_on:
+      - ewm-db
+      - stats-server
+    environment:
+      - EWM_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/explore
+      - EWM_POSTGRES_USER=exuser
+      - EWM_POSTGRES_PASSWORD=pass
+      - STATS_SERVER_URL=http://stats-server:9090
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006
 
   ewm-db:
     image: postgres:14-alpine
+    container_name: main-db-container
+    ports:
+      - "6542:5432"
+    environment:
+      - POSTGRES_DB=explore
+      - POSTGRES_USER=exuser
+      - POSTGRES_PASSWORD=pass

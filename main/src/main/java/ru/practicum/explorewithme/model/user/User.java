@@ -1,0 +1,20 @@
+package ru.practicum.explorewithme.model.user;
+
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+import javax.persistence.*;
+
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@Table(name = "users")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+    String name;
+    String email;
+}
