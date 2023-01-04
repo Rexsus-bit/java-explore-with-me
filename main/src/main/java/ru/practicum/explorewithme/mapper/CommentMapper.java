@@ -11,6 +11,7 @@ public class CommentMapper {
                 .comment(comment.getComment())
                 .owner(comment.getOwner().getId())
                 .event(comment.getEvent().getId())
+                .creationTime(comment.getCreationTime())
                 .build();
     }
 }

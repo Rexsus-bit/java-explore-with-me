@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.exceptions.*;
@@ -179,9 +180,8 @@ public class UserService {
     }
 
     public List<Comment> findCommentsOfEvent(Long eventId, Integer from, Integer size) {
-        Pageable page = OffsetLimitPageable.of(from, size);
-        List<Comment> commentList = commentJpaRepository.findCommentByEventId(eventId, page);
-        return commentList.stream().sorted(Comparator.comparing(Comment::getCreationTime)).collect(Collectors.toList());
+        Pageable page = OffsetLimitPageable.of(from, size, Sort.by(Sort.Direction.ASC, "creationTime"));
+        return commentJpaRepository.findCommentByEventId(eventId, page);
     }
 
 }
