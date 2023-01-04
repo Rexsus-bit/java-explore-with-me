@@ -33,8 +33,6 @@ services:
     ports:
       - "8080:8080"
       - "5006:5006"
-    volumes:
-      - ./data:/var/lib/postgresql/data
     depends_on:
       - ewm-db
       - stats-server
@@ -50,6 +48,8 @@ services:
     container_name: main-db-container
     ports:
       - "6542:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=explore
       - POSTGRES_USER=exuser

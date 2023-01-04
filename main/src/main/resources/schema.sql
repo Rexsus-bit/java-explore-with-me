@@ -74,10 +74,10 @@ CREATE TABLE comments
 );
 
 ALTER TABLE events
-    ADD FOREIGN KEY (initiator_id) REFERENCES users (id) /*ON DELETE NO ACTION*/;
+    ADD FOREIGN KEY (initiator_id) REFERENCES users (id) ON DELETE CASCADE;
 
 ALTER TABLE events
-    ADD FOREIGN KEY (location_id) REFERENCES locations (id) /*ON DELETE NO ACTION*/;
+    ADD FOREIGN KEY (location_id) REFERENCES locations (id) ON DELETE RESTRICT;
 
 ALTER TABLE participation_requests
     ADD FOREIGN KEY (event_id) REFERENCES events (event_id)  ON DELETE CASCADE;
