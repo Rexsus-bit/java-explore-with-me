@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.mapper.CommentMapper;
 import ru.practicum.explorewithme.mapper.EventMapper;
 import ru.practicum.explorewithme.mapper.ParticipationRequestMapper;
+import ru.practicum.explorewithme.model.Comment.Comment;
 import ru.practicum.explorewithme.model.Comment.CommentDto;
 import ru.practicum.explorewithme.model.event.*;
 import ru.practicum.explorewithme.model.participationrequest.ParticipationRequest;
@@ -103,6 +104,16 @@ public class UserEventsController {
         return ParticipationRequestMapper.toParticipationRequestDto(userService
                 .cancelParticipationRequestByUser(userId, requestId));
     }
+
+    @GetMapping("/comment")
+    public List<CommentDto> findCommentsOfEvent(@RequestParam Long eventId,
+                                                @RequestParam(defaultValue = "0") Integer from,
+                                                @RequestParam(defaultValue = "10") Integer size
+    ) {
+         List<Comment> commentList = userService.findCommentsOfEvent(eventId, from, size);
+         return commentList.stream().map(CommentMapper::toCommentDto).collect(Collectors.toList());
+    }
+
 
     @PostMapping("/{userId}/comment")
     public CommentDto addCommentToEvent(@PathVariable Long userId,

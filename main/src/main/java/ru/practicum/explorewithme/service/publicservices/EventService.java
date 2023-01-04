@@ -32,7 +32,7 @@ public class EventService {
 
         List<Event> events = eventCriteriaRepository.findEventsByCustomCriteria(null, null, categories,
                 rangeStart, rangeEnd, from, size, text);
-        if (sort == null) sort = EventSortType.VIEWS;// TODO оптимизировать
+        if (sort == null) sort = EventSortType.VIEWS;
         if (sort.equals(EventSortType.VIEWS)) {
             events = events.stream().sorted(Comparator.comparing(Event::getViews))
                     .collect(Collectors.toList());

@@ -15,8 +15,10 @@ import ru.practicum.explorewithme.repository.*;
 import ru.practicum.explorewithme.util.OffsetLimitPageable;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -175,4 +177,11 @@ public class UserService {
         comment.setComment(commentText);
         return commentJpaRepository.save(comment);
     }
+
+    public List<Comment> findCommentsOfEvent(Long eventId, Integer from, Integer size) {
+        Pageable page = OffsetLimitPageable.of(from, size);
+        List<Comment> commentList = commentJpaRepository.findCommentByEventId(eventId, page);
+        return commentList.stream().sorted(Comparator.comparing(Comment::getCreationTime)).collect(Collectors.toList());
+    }
+
 }
