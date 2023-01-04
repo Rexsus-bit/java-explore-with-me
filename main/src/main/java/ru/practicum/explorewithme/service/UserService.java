@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.exceptions.*;
+import ru.practicum.explorewithme.model.Comment.Comment;
 import ru.practicum.explorewithme.model.Status;
 import ru.practicum.explorewithme.model.event.*;
 import ru.practicum.explorewithme.model.participationrequest.ParticipationRequest;
@@ -15,6 +16,7 @@ import ru.practicum.explorewithme.util.OffsetLimitPageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class UserService {
     private final EventJpaRepository eventJpaRepository;
     private final CategoryJpaRepository categoryJpaRepository;
     private final ParticipationRequestJpaRepository participationRequestJpaRepository;
-
+    private final CommentJpaRepository commentJpaRepository;
     @Transactional
     public Event createEvent(Long userId, NewEventDto newEventDto) {
         Event event = modelMapper.map(newEventDto, Event.class);
@@ -147,5 +149,30 @@ public class UserService {
         if (!event.equals(participationRequest.getEvent())) throw new ValidationException();
         participationRequest.setStatus(Status.REJECTED);
         return participationRequestJpaRepository.save(participationRequest);
+    }
+
+    public Comment addCommentToEvent(Long userId, Long eventId, String commentText) {
+        Comment comment = Comment.builder()
+                .comment(commentText)
+                .owner(userJpaRepository.findById(userId).orElseThrow(UserNotFoundException::new))
+                .event(eventJpaRepository.findById(eventId).orElseThrow(EventNotFoundException::new))
+                .creationTime(LocalDateTime.now())
+                .build();
+        return commentJpaRepository.save(comment);
+
+    }
+
+    public void deleteCommentOfEvent(Long userId, Long commentId) {
+        if (!Objects.equals(userId, userJpaRepository.findById(userId).orElseThrow(UserNotFoundException::new).getId()))
+            throw new ValidationException();
+        commentJpaRepository.deleteById(commentId);
+    }
+
+    public Comment updateCommentOfEvent(Long userId, Long eventId, Long commentId, String commentText) {
+        Comment comment = commentJpaRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+        if (!Objects.equals(userId, comment.getOwner().getId()) || !Objects.equals(eventId, comment.getEvent().getId()))
+            throw new ValidationException();
+        comment.setComment(commentText);
+        return commentJpaRepository.save(comment);
     }
 }

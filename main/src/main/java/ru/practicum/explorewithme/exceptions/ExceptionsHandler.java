@@ -17,7 +17,8 @@ public class ExceptionsHandler {
     }
 
     @ExceptionHandler(value = {CategoryNotFoundException.class, UserNotFoundException.class,
-            CompilationNotFoundException.class, ParticipationRequestNotFoundException.class})
+            CompilationNotFoundException.class, ParticipationRequestNotFoundException.class,
+            CommentNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleNotFound(final RuntimeException ex) {
         return new ApiError(ex.getStackTrace(), ex.getMessage(), unmeetConditions,

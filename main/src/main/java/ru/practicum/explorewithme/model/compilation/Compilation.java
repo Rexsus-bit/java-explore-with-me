@@ -18,7 +18,7 @@ public class Compilation {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "compilations_events_matches",
             joinColumns = {@JoinColumn(name = "compilation_id")},
-            inverseJoinColumns = {@JoinColumn(name = "event_id")}) // TODO ЗАЧЕМ?
+            inverseJoinColumns = {@JoinColumn(name = "event_id")})
     private List<Event> events;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -4,8 +4,10 @@ package ru.practicum.explorewithme.api.forusers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.explorewithme.mapper.CommentMapper;
 import ru.practicum.explorewithme.mapper.EventMapper;
 import ru.practicum.explorewithme.mapper.ParticipationRequestMapper;
+import ru.practicum.explorewithme.model.Comment.CommentDto;
 import ru.practicum.explorewithme.model.event.*;
 import ru.practicum.explorewithme.model.participationrequest.ParticipationRequest;
 import ru.practicum.explorewithme.model.participationrequest.ParticipationRequestDto;
@@ -102,5 +104,24 @@ public class UserEventsController {
                 .cancelParticipationRequestByUser(userId, requestId));
     }
 
+    @PostMapping("/{userId}/comment")
+    public CommentDto addCommentToEvent(@PathVariable Long userId,
+                                        @RequestParam Long eventId,
+                                        @RequestParam String commentText) {
+        return CommentMapper.toCommentDto(userService.addCommentToEvent(userId, eventId, commentText));
+    }
+
+    @PatchMapping("/{userId}/comment")
+    public CommentDto updateCommentOfEvent(@PathVariable Long userId,
+                                           @RequestParam Long eventId,
+                                           @RequestParam Long commentId,
+                                           @RequestParam String commentText) {
+        return CommentMapper.toCommentDto(userService.updateCommentOfEvent(userId, eventId, commentId, commentText));
+    }
+
+    @DeleteMapping("/{userId}/comment")
+    public void deleteCommentOfEvent(@PathVariable Long userId, @RequestParam Long commentId) {
+        userService.deleteCommentOfEvent(userId, commentId);
+    }
 
 }

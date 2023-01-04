@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.exceptions.*;
+import ru.practicum.explorewithme.model.Comment.Comment;
 import ru.practicum.explorewithme.model.category.Category;
 import ru.practicum.explorewithme.model.compilation.Compilation;
 import ru.practicum.explorewithme.model.compilation.NewCompilationDto;
@@ -28,6 +29,7 @@ public class AdminService {
     private final CategoryJpaRepository categoryJpaRepository;
     private final CompilationJpaRepository compilationJpaRepository;
     private final EventCriteriaRepository eventCriteriaRepository;
+    private final CommentJpaRepository commentJpaRepository;
     private final ModelMapper modelMapper;
 
     public List<Event> findEvents(List<Long> users, List<State> states, List<Long> categories, LocalDateTime rangeStart,
@@ -170,4 +172,11 @@ public class AdminService {
         compilation.getEvents().add(event);
         compilationJpaRepository.save(compilation);
     }
+
+    public Comment moderateCommentOfEvent(Long commentId, String commentText) {
+        Comment comment = commentJpaRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+        comment.setComment(commentText);
+        return commentJpaRepository.save(comment);
+    }
+
 }

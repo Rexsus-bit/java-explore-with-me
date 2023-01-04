@@ -1,4 +1,5 @@
-DROP TABLE IF EXISTS users, categories, compilations, events, locations, participation_requests, compilations_events_matches;
+DROP TABLE IF EXISTS users, categories, compilations, events, locations, participation_requests,
+    compilations_events_matches, comments;
 
 CREATE TABLE users
 (
@@ -61,6 +62,15 @@ CREATE TABLE compilations_events_matches
     compilation_id bigint,
     event_id       bigint,
     PRIMARY KEY (compilation_id, event_id)
+);
+
+CREATE TABLE comments
+(
+    comment_id   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    comment      varchar,
+    owner_id     bigint REFERENCES users (id) ON DELETE CASCADE,
+    event_id     bigint REFERENCES events (event_id)  ON DELETE CASCADE,
+    comment_date timestamp
 );
 
 ALTER TABLE events
