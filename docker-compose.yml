@@ -54,4 +54,3 @@ services:
       - POSTGRES_DB=explore
       - POSTGRES_USER=exuser
       - POSTGRES_PASSWORD=pass
-
