@@ -182,5 +182,4 @@ public class UserService {
         Pageable page = OffsetLimitPageable.of(from, size, Sort.by(Sort.Direction.ASC, "creationTime"));
         return commentJpaRepository.findCommentByEventId(eventId, page);
     }
-
 }
