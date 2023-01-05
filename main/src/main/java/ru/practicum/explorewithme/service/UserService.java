@@ -16,10 +16,8 @@ import ru.practicum.explorewithme.repository.*;
 import ru.practicum.explorewithme.util.OffsetLimitPageable;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +29,7 @@ public class UserService {
     private final CategoryJpaRepository categoryJpaRepository;
     private final ParticipationRequestJpaRepository participationRequestJpaRepository;
     private final CommentJpaRepository commentJpaRepository;
+
     @Transactional
     public Event createEvent(Long userId, NewEventDto newEventDto) {
         Event event = modelMapper.map(newEventDto, Event.class);
