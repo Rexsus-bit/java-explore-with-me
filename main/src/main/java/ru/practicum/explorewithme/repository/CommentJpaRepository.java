@@ -3,7 +3,7 @@ package ru.practicum.explorewithme.repository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.practicum.explorewithme.model.Comment.Comment;
+import ru.practicum.explorewithme.model.comment.Comment;
 
 import java.util.List;
 
@@ -11,5 +11,4 @@ import java.util.List;
 public interface CommentJpaRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findCommentByEventId(Long eventId, Pageable page);
-
 }

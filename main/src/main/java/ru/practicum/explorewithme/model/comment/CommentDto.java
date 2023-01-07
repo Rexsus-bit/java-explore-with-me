@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.model.Comment;
+package ru.practicum.explorewithme.model.comment;
 
 import lombok.Builder;
 import lombok.Getter;

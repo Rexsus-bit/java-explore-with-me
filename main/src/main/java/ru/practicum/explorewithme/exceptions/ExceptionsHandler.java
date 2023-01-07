@@ -25,5 +25,4 @@ public class ExceptionsHandler {
                 HttpStatus.NOT_FOUND, LocalDateTime.now());
 
     }
-
 }

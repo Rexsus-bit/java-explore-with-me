@@ -6,8 +6,6 @@ services:
     ports:
       - "9090:9090"
       - "5005:5005"
-#    volumes:
-#      - ./data:/var/lib/postgresql/data
     depends_on:
       - stats-db
     environment:

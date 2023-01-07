@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.exceptions.*;
-import ru.practicum.explorewithme.model.Comment.Comment;
+import ru.practicum.explorewithme.model.comment.Comment;
 import ru.practicum.explorewithme.model.category.Category;
 import ru.practicum.explorewithme.model.compilation.Compilation;
 import ru.practicum.explorewithme.model.compilation.NewCompilationDto;
@@ -44,7 +44,6 @@ public class AdminService {
     public User addUser(User user) {
         if (null != userJpaRepository.findByName(user.getName())) throw new ValidationException();
         return userJpaRepository.save(user);
-
     }
 
     @Transactional
@@ -179,5 +178,4 @@ public class AdminService {
         comment.setComment(commentText);
         return commentJpaRepository.save(comment);
     }
-
 }

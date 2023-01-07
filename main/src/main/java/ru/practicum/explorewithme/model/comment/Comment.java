@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.model.Comment;
+package ru.practicum.explorewithme.model.comment;
 
 import lombok.*;
 import ru.practicum.explorewithme.model.event.Event;
@@ -7,7 +7,8 @@ import ru.practicum.explorewithme.model.user.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "comments")
 @Builder
@@ -28,5 +29,4 @@ public class Comment {
     private Event event;
     @Column(name = "comment_date")
     private LocalDateTime creationTime;
-
 }
