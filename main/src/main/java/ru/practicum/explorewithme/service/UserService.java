@@ -7,7 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.exceptions.*;
-import ru.practicum.explorewithme.model.Comment.Comment;
+import ru.practicum.explorewithme.model.comment.Comment;
 import ru.practicum.explorewithme.model.Status;
 import ru.practicum.explorewithme.model.event.*;
 import ru.practicum.explorewithme.model.participationrequest.ParticipationRequest;

@@ -1,7 +1,7 @@
 package ru.practicum.explorewithme.mapper;
 
-import ru.practicum.explorewithme.model.Comment.Comment;
-import ru.practicum.explorewithme.model.Comment.CommentDto;
+import ru.practicum.explorewithme.model.comment.Comment;
+import ru.practicum.explorewithme.model.comment.CommentDto;
 
 public class CommentMapper {
 

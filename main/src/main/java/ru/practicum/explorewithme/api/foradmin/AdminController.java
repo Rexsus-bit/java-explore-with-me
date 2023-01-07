@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.mapper.CommentMapper;
 import ru.practicum.explorewithme.mapper.CompilationMapper;
 import ru.practicum.explorewithme.mapper.EventMapper;
-import ru.practicum.explorewithme.model.Comment.CommentDto;
+import ru.practicum.explorewithme.model.comment.CommentDto;
 import ru.practicum.explorewithme.model.category.Category;
 import ru.practicum.explorewithme.model.category.CategoryDto;
 import ru.practicum.explorewithme.model.category.NewCategoryDto;
@@ -149,5 +149,4 @@ public class AdminController {
                                              @RequestParam String commentText) {
         return CommentMapper.toCommentDto(adminService.moderateCommentOfEvent(commentId, commentText));
     }
-
 }

@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.model.Comment;
+package ru.practicum.explorewithme.model.comment;
 
 import lombok.*;
 import ru.practicum.explorewithme.model.event.Event;
@@ -28,5 +28,4 @@ public class Comment {
     private Event event;
     @Column(name = "comment_date")
     private LocalDateTime creationTime;
-
 }
