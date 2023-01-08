@@ -21,6 +21,13 @@ CREATE TABLE compilations
     title          varchar
 );
 
+CREATE TABLE locations
+(
+    id  BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    lat numeric,
+    lon numeric
+);
+
 CREATE TABLE events
 (
     annotation         varchar,
@@ -30,8 +37,8 @@ CREATE TABLE events
     description        varchar,
     event_date         timestamp,
     event_id           bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
-    initiator_id       bigint,
-    location_id        bigint,
+    initiator_id       bigint REFERENCES users (id) ON DELETE CASCADE,
+    location_id        bigint REFERENCES locations (id) ON DELETE RESTRICT,
     paid               boolean,
     participant_limit  int DEFAULT 0 NOT NULL,
     published_on       timestamp,
@@ -41,26 +48,19 @@ CREATE TABLE events
     views              bigint
 );
 
-CREATE TABLE locations
-(
-    id  BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    lat numeric,
-    lon numeric
-);
-
 CREATE TABLE participation_requests
 (
     created      timestamp,
-    event_id     bigint,
+    event_id     bigint REFERENCES events (event_id)  ON DELETE CASCADE,
     id           BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    requester_id bigint,
+    requester_id bigint REFERENCES users (id)  ON DELETE CASCADE,
     status       varchar
 );
 
 CREATE TABLE compilations_events_matches
 (
-    compilation_id bigint,
-    event_id       bigint,
+    compilation_id bigint REFERENCES compilations (compilation_id) ON DELETE CASCADE,
+    event_id       bigint REFERENCES events (event_id) ON DELETE CASCADE,
     PRIMARY KEY (compilation_id, event_id)
 );
 
@@ -72,21 +72,3 @@ CREATE TABLE comments
     event_id     bigint REFERENCES events (event_id)  ON DELETE CASCADE,
     comment_date timestamp
 );
-
-ALTER TABLE events
-    ADD FOREIGN KEY (initiator_id) REFERENCES users (id) ON DELETE CASCADE;
-
-ALTER TABLE events
-    ADD FOREIGN KEY (location_id) REFERENCES locations (id) ON DELETE RESTRICT;
-
-ALTER TABLE participation_requests
-    ADD FOREIGN KEY (event_id) REFERENCES events (event_id)  ON DELETE CASCADE;
-
-ALTER TABLE participation_requests
-    ADD FOREIGN KEY (requester_id) REFERENCES users (id)  ON DELETE CASCADE ;
-
-ALTER TABLE compilations_events_matches
-    ADD FOREIGN KEY (compilation_id) REFERENCES compilations (compilation_id) ON DELETE CASCADE ;
-
-ALTER TABLE compilations_events_matches
-    ADD FOREIGN KEY (event_id) REFERENCES events (event_id) ON DELETE CASCADE ;
